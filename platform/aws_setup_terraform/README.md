@@ -43,6 +43,11 @@ Plan and apply the Terraform configuration:
 terraform apply
 ```
 
+If you want to reconfigure exist nOps account:
+
+```
+terraform apply -var="reconfigure=true"
+```
 4. Troubleshooting
 
 If you want to reinstall the stack you might got problem like
