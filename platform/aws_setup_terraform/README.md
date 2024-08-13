@@ -33,10 +33,15 @@ system_bucket_id = "your-system-bucket-id"
 
 3. Initialize Terraform:
 
+```
 terraform init
+```
 
 Plan and apply the Terraform configuration:
 
+```
+terraform apply
+```
 
 4. Troubleshooting
 
