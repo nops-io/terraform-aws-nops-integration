@@ -243,7 +243,6 @@ resource "aws_iam_role_policy" "nops_integration_policy" {
           "ssm-contacts:*",
           "ssm:DescribeParameters*",
           "ssm:GetParameter*",
-          "s3:Get*",
           "sso:Describe*",
           "sso:Get*",
           "sso:List*",

@@ -28,7 +28,7 @@ This Terraform module automates the process of integrating your AWS account with
 ```hcl
 aws_region = "us-west-2"
 api_key    = "your-nops-api-key"
-system_bucket_id = "your-system-bucket-id"
+system_bucket_name = "your-system-bucket-id"
 ```
 
 3. Initialize Terraform:
