@@ -1,12 +1,3 @@
-# iam.tf
-
-resource "null_resource" "force_new_role" {
-  triggers = {
-    account_id = local.account_id
-  }
-}
-
-
 resource "aws_iam_role" "nops_integration_role" {
   name = "NopsIntegrationRole-${local.client_id}"
 
