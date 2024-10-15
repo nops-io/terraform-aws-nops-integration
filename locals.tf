@@ -2,8 +2,9 @@ locals {
   account_id        = data.aws_caller_identity.current.account_id
   master_account_id = data.aws_organizations_organization.current.master_account_id
   is_master_account = local.account_id == local.master_account_id
-  client_id         = jsondecode(data.http.check_current_client.response_body).id
-  project_aws_list  = jsondecode(data.http.check_project_aws.response_body)
+  client_id         = try(jsondecode(data.http.check_current_client.response_body).id, "error")
+  project_aws_list  = try(jsondecode(data.http.check_project_aws.response_body), "error")
+  errors            = local.client_id == "error" || local.project_aws_list == "error" ? true : false
   matching_projects = [
     for project in local.project_aws_list : project
     if project.account_number == local.account_id

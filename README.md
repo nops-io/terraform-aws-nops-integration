@@ -21,11 +21,30 @@ This Terraform module automates the process of integrating your AWS account with
 
 ## Usage
 
-1. Either on a Payer account or Child account in the AWS organization
+### Onboarding Payer account
+
+The below example shows how to add the management (root) AWS account integration:
+
+
+1. Being authenticated on the Payer account of the AWS organization, add the following code:
 ```hcl
+provider "aws" {
+  alias  = "root"
+  region = "us-east-1"
+  assume_role {
+    role_arn = "arn:aws:iam::123456789012:role/admin-role"
+  }
+}
+
 module tf_onboarding {
-  source             = "terraform-aws-nops-account-onboarding"
+  providers = {
+    aws = aws.root
+  }
+
+  source             = "nops-onboarding-testing/aws"
+  # This bucket will be created by the module with the name provided here, make sure its globally unique.
   system_bucket_name = "example"
+  # nOps API key that will be used to authenticate with the nOps platform to onboard the account.
   api_key            = "nops_api_key"
 }
 ```
@@ -42,7 +61,7 @@ terraform init
 terraform apply
 ```
 
-If you want to reconfigure exist nOps account:
+If you want to reconfigure an existing nOps account:
 
 ```
 terraform apply -var="reconfigure=true"
@@ -52,7 +71,11 @@ or
 
 ```hcl
 module tf_onboarding {
-  source             = "mkahnlein-caylent/nops-onboarding-testing/aws"
+  providers = {
+    aws = aws.root
+  }
+
+  source             = "nops-onboarding-testing/aws"
   system_bucket_name = "example"
   api_key            = "nops_api_key"
   reconfigure        = true
@@ -70,6 +93,30 @@ If you want to reinstall the stack you might got problem like
 You can import the role to terraform state by running the following command
 ```
 terraform import aws_iam_role.nops_integration_role NopsIntegrationRole-xxxxx
+```
+### Onboarding child account
+
+Onboarding child accounts is performed using the same module, it already contains the logic to react when its being applied on any account that is not root
+```hcl
+provider "aws" {
+  alias  = "child"
+  region = "us-east-1"
+  assume_role {
+    role_arn = "arn:aws:iam::xxxxxxxx:role/admin-role"
+  }
+}
+
+module tf_onboarding {
+  providers = {
+    aws = aws.child
+  }
+
+  source             = "nops-onboarding-testing/aws"
+  # This bucket will be created by the module with the name provided here, make sure its globally unique.
+  system_bucket_name = "example"
+  # nOps API key that will be used to authenticate with the nOps platform to onboard the account.
+  api_key            = "nops_api_key"
+}
 ```
 
 <!-- BEGIN_TF_DOCS -->
@@ -106,6 +153,7 @@ No modules.
 | [aws_iam_role_policy.nops_system_bucket_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
 | [aws_s3_bucket.nops_system_bucket](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket) | resource |
 | [aws_s3_bucket_server_side_encryption_configuration.nops_bucket_encryption](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_server_side_encryption_configuration) | resource |
+| [null_resource.check_api_errors](https://registry.terraform.io/providers/hashicorp/null/3.2.3/docs/resources/resource) | resource |
 | [null_resource.check_existing_project](https://registry.terraform.io/providers/hashicorp/null/3.2.3/docs/resources/resource) | resource |
 | [null_resource.force_new_role](https://registry.terraform.io/providers/hashicorp/null/3.2.3/docs/resources/resource) | resource |
 | [null_resource.project_check](https://registry.terraform.io/providers/hashicorp/null/3.2.3/docs/resources/resource) | resource |
@@ -125,7 +173,7 @@ No modules.
 | <a name="input_api_key"></a> [api\_key](#input\_api\_key) | The nOps API key | `string` | n/a | yes |
 | <a name="input_nops_principal"></a> [nops\_principal](#input\_nops\_principal) | The nOps principal account number | `string` | `"202279780353"` | no |
 | <a name="input_nops_url"></a> [nops\_url](#input\_nops\_url) | The nOps base URL | `string` | `"https://app.nops.io/"` | no |
-| <a name="input_reconfigure"></a> [reconfigure](#input\_reconfigure) | If true, allows overriding existing project settings. If false, stops execution if project already exists. | `bool` | `false` | no |
+| <a name="input_reconfigure"></a> [reconfigure](#input\_reconfigure) | If true, allows overriding existing project settings. If false, stops execution if project already exists. | `bool` | `true` | no |
 | <a name="input_system_bucket_name"></a> [system\_bucket\_name](#input\_system\_bucket\_name) | The name of the system bucket for nOps integration | `string` | n/a | yes |
 
 ## Outputs

@@ -4,7 +4,7 @@ resource "aws_s3_bucket" "nops_system_bucket" {
   force_destroy = false
 
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
     ignore_changes  = all
   }
 

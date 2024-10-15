@@ -12,6 +12,14 @@ resource "null_resource" "check_existing_project" {
   }
 }
 
+resource "null_resource" "check_api_errors" {
+  count = local.errors ? 1 : 0
+
+  provisioner "local-exec" {
+    command = "echo 'Error: An error occurred while requesting the nOps API, please try again later.' && exit 1"
+  }
+}
+
 resource "null_resource" "project_check" {
   count = local.project_count > 1 ? 1 : 0
   provisioner "local-exec" {

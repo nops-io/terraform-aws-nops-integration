@@ -22,6 +22,6 @@ variable "system_bucket_name" {
 
 variable "reconfigure" {
   type        = bool
-  default     = false
+  default     = true
   description = "If true, allows overriding existing project settings. If false, stops execution if project already exists."
 }
