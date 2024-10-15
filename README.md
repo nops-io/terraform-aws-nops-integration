@@ -15,29 +15,28 @@ This Terraform module automates the process of integrating your AWS account with
 
 ## Prerequisites
 
-- Terraform v0.13+
+- Terraform v1.0+
 - AWS CLI configured with appropriate permissions
 - nOps API key
 
 ## Usage
 
-1. Clone this repository:
-
-
-2. Create a `terraform.tfvars` file with your specific variables:
+1. Either on a Payer account or Child account in the AWS organization
 ```hcl
-aws_region = "us-west-2"
-api_key    = "your-nops-api-key"
-system_bucket_name = "your-system-bucket-id"
+module tf_onboarding {
+  source             = "terraform-aws-nops-account-onboarding"
+  system_bucket_name = "example"
+  api_key            = "nops_api_key"
+}
 ```
 
-3. Initialize Terraform:
+2. Initialize Terraform:
 
 ```
 terraform init
 ```
 
-Plan and apply the Terraform configuration:
+3. Plan and apply the Terraform configuration:
 
 ```
 terraform apply
@@ -48,6 +47,18 @@ If you want to reconfigure exist nOps account:
 ```
 terraform apply -var="reconfigure=true"
 ```
+
+or
+
+```hcl
+module tf_onboarding {
+  source             = "mkahnlein-caylent/nops-onboarding-testing/aws"
+  system_bucket_name = "example"
+  api_key            = "nops_api_key"
+  reconfigure        = true
+}
+```
+
 4. Troubleshooting
 
 If you want to reinstall the stack you might got problem like
