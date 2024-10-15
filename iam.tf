@@ -28,7 +28,7 @@ resource "aws_iam_role" "nops_integration_role" {
   depends_on = [null_resource.force_new_role]
   lifecycle {
     create_before_destroy = true
-    replace_triggered_by = [null_resource.reconfigure_trigger.id]
+    replace_triggered_by  = [null_resource.reconfigure_trigger.id]
   }
 }
 
@@ -58,8 +58,8 @@ resource "aws_iam_role_policy" "nops_integration_policy" {
         Resource = "*"
       },
       {
-        Effect   = "Deny"
-        Action   = [
+        Effect = "Deny"
+        Action = [
           "acm-pca:Describe*",
           "acm-pca:Get*",
           "acm-pca:List*",
@@ -273,9 +273,9 @@ resource "aws_iam_role_policy" "nops_eventbridge_integration_policy" {
 }
 
 resource "aws_iam_role_policy" "nops_system_bucket_policy" {
-  count  = local.is_master_account && var.system_bucket_name != "na" ? 1 : 0
-  name = "NopsSystemBucketPolicy"
-  role = aws_iam_role.nops_integration_role.id
+  count = local.is_master_account && var.system_bucket_name != "na" ? 1 : 0
+  name  = "NopsSystemBucketPolicy"
+  role  = aws_iam_role.nops_integration_role.id
 
   policy = jsonencode({
     Version = "2012-10-17"

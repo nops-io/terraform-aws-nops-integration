@@ -9,12 +9,12 @@ output "current_client_id" {
 }
 
 output "master_account_id" {
-  value = local.master_account_id
+  value       = local.master_account_id
   description = "The account ID of the AWS Organization's master account"
 }
 
 output "is_master_account" {
-  value = local.is_master_account
+  value       = local.is_master_account
   description = "Whether the current account is the master account"
 }
 
@@ -35,11 +35,16 @@ output "system_bucket_name" {
 
 output "project_status" {
   description = "Status of the nOps project for this account"
-  value = local.project_count == 0 ? "New project created" : (local.project_count == 1 && var.reconfigure ? "Existing project updated" : (local.project_count == 1 && !var.reconfigure ? "Existing project found, integration skipped" : "Error: Multiple projects found"))
+  value       = local.project_count == 0 ? "New project created" : (local.project_count == 1 && var.reconfigure ? "Existing project updated" : (local.project_count == 1 && !var.reconfigure ? "Existing project found, integration skipped" : "Error: Multiple projects found"))
 }
 
 output "notify_nops_integration_complete_status" {
   description = "Status of the nOps integration notification"
-  value = jsonencode(local.should_proceed ? jsondecode(data.http.notify_nops_integration_complete[0].response_body) : {"message": "Integration skipped: Project already exists"}
+  value = jsonencode(local.should_proceed ? jsondecode(data.http.notify_nops_integration_complete[0].response_body) : { "message" : "Integration skipped: Project already exists" }
   )
+}
+
+output "is_master_account_out" {
+  description = "Indicates if the account is the master account"
+  value       = local.is_master_account
 }

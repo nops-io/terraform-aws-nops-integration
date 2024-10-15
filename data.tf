@@ -33,8 +33,8 @@ data "http" "create_nops_project" {
   }
 
   request_body = jsonencode({
-    name = "AWS Account ${local.account_id}"
-    account_number = local.account_id
+    name                        = "AWS Account ${local.account_id}"
+    account_number              = local.account_id
     master_payer_account_number = local.master_account_id
   })
 }

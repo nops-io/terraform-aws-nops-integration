@@ -6,15 +6,10 @@ resource "null_resource" "reconfigure_trigger" {
 
 resource "null_resource" "check_existing_project" {
   count = local.project_count > 0 && !var.reconfigure ? 1 : 0
-  
+
   provisioner "local-exec" {
     command = "echo 'Error: Project already exists for this account. Set reconfigure to true to proceed.' && exit 1"
   }
-}
-
-output "is_master_account_out" {
-  description = "Indicates if the account is the master account"
-  value       = local.is_master_account
 }
 
 resource "null_resource" "project_check" {

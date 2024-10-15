@@ -1,9 +1,3 @@
-variable "aws_region" {
-  type        = string
-  default     = "us-west-2"
-  description = "The AWS region to deploy resources"
-}
-
 variable "nops_url" {
   type        = string
   default     = "https://app.nops.io/"
