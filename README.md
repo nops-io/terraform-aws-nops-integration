@@ -41,7 +41,7 @@ module tf_onboarding {
     aws = aws.root
   }
 
-  source             = "nops-onboarding-testing/aws"
+  source             = "nops-io/nops-integration/aws"
   # This bucket will be created by the module with the name provided here, make sure its globally unique.
   system_bucket_name = "example"
   # nOps API key that will be used to authenticate with the nOps platform to onboard the account.
@@ -75,7 +75,7 @@ module tf_onboarding {
     aws = aws.root
   }
 
-  source             = "nops-onboarding-testing/aws"
+  source             = "nops-io/nops-integration/aws"
   system_bucket_name = "example"
   api_key            = "nops_api_key"
   reconfigure        = true
@@ -111,7 +111,7 @@ module tf_onboarding {
     aws = aws.child
   }
 
-  source             = "nops-onboarding-testing/aws"
+  source             = "nops-io/nops-integration/aws"
   # This bucket will be created by the module with the name provided here, make sure its globally unique.
   system_bucket_name = "example"
   # nOps API key that will be used to authenticate with the nOps platform to onboard the account.
