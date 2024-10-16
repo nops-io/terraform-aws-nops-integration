@@ -11,7 +11,6 @@ provider "aws" {
   }
 }
 
-
 module "onboarding_payer_account" {
   providers = {
     aws = aws.root
