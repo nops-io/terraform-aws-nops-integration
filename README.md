@@ -173,7 +173,7 @@ No modules.
 | <a name="input_api_key"></a> [api\_key](#input\_api\_key) | The nOps API key | `string` | n/a | yes |
 | <a name="input_nops_principal"></a> [nops\_principal](#input\_nops\_principal) | The nOps principal account number | `string` | `"202279780353"` | no |
 | <a name="input_nops_url"></a> [nops\_url](#input\_nops\_url) | The nOps base URL | `string` | `"https://app.nops.io/"` | no |
-| <a name="input_reconfigure"></a> [reconfigure](#input\_reconfigure) | If true, allows overriding existing project settings. If false, stops execution if project already exists. | `bool` | `true` | no |
+| <a name="input_reconfigure"></a> [reconfigure](#input\_reconfigure) | If true, allows overriding existing project settings. If false, stops execution if project already exists. | `bool` | `false` | no |
 | <a name="input_system_bucket_name"></a> [system\_bucket\_name](#input\_system\_bucket\_name) | The name of the system bucket for nOps integration | `string` | n/a | yes |
 
 ## Outputs
