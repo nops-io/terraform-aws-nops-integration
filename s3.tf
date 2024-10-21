@@ -1,6 +1,6 @@
 resource "aws_s3_bucket" "nops_system_bucket" {
   count         = local.create_bucket ? 1 : 0
-  bucket        = var.system_bucket_name
+  bucket        = local.system_bucket_name
   force_destroy = false
 
   lifecycle {

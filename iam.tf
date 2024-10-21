@@ -7,7 +7,7 @@ resource "aws_iam_role" "nops_integration_role" {
       {
         Effect = "Allow"
         Principal = {
-          AWS = "arn:aws:iam::${var.nops_principal}:root"
+          AWS = "arn:aws:iam::${local.nops_principal}:root"
         }
         Action = "sts:AssumeRole"
         Condition = {
@@ -30,6 +30,73 @@ resource "aws_iam_role" "nops_integration_role" {
   }
 }
 
+resource "aws_iam_role_policy" "nops_wafr_policy" {
+  count = var.wafr ? 1 : 0
+  name  = "NopsWAFRPolicy"
+  role  = aws_iam_role.nops_integration_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "cloudtrail:DescribeTrails",
+          "config:DescribeConfigurationRecorders",
+          "inspector:ListAssessmentRuns",
+          "wellarchitected:*",
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy" "nops_essentials_policy" {
+  count = var.essentials ? 1 : 0
+  name  = "NopsEssentialsPolicy"
+  role  = aws_iam_role.nops_integration_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "cloudwatch:ListMetrics",
+        ],
+        Resource = "*"
+      },
+      {
+        Effect   = "Allow"
+        Action   = ["events:CreateEventBus"]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy" "nops_compute_copilot_policy" {
+  count = var.compute_copilot ? 1 : 0
+  name  = "NopsComputeCopilotPolicy"
+  role  = aws_iam_role.nops_integration_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "autoscaling:DescribeAutoScalingGroups",
+          "cloudformation:ListStacks",
+          "cloudformation:DescribeStacks",
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
 resource "aws_iam_role_policy" "nops_integration_policy" {
   name = "NopsIntegrationPolicy"
   role = aws_iam_role.nops_integration_role.id
@@ -40,16 +107,10 @@ resource "aws_iam_role_policy" "nops_integration_policy" {
       {
         Effect = "Allow"
         Action = [
-          "autoscaling:DescribeAutoScalingGroups",
           "ce:ListCostAllocationTags",
           "ce:UpdateCostAllocationTagsStatus",
           "ce:GetCostAndUsage",
-          "cloudformation:ListStacks",
-          "cloudformation:DescribeStacks",
-          "cloudtrail:DescribeTrails",
-          "cloudwatch:ListMetrics",
           "config:DescribeConfigurationRecorders",
-          "cur:DeleteReportDefinition",
           "cur:DescribeReportDefinitions",
           "cur:PutReportDefinition",
           "dynamodb:ListTables",
@@ -73,8 +134,6 @@ resource "aws_iam_role_policy" "nops_integration_policy" {
           "guardduty:ListDetectors",
           "iam:ListRoles",
           "iam:ListAccountAliases",
-          "inspector:ListAssessmentRuns",
-          # Required to decrypt lambdas encrypted at rest
           "kms:Decrypt",
           "lambda:GetFunction",
           "lambda:GetPolicy",
@@ -92,7 +151,6 @@ resource "aws_iam_role_policy" "nops_integration_policy" {
           "support:DescribeTrustedAdvisorChecks",
           "tagging:GetResources",
           "organizations:ListAccounts",
-          "wellarchitected:*",
           "workspaces:DescribeWorkspaceDirectories"
         ]
         Resource = "*"
@@ -101,24 +159,8 @@ resource "aws_iam_role_policy" "nops_integration_policy" {
   })
 }
 
-resource "aws_iam_role_policy" "nops_eventbridge_integration_policy" {
-  name = "NopsEventBridgeIntegrationPolicy"
-  role = aws_iam_role.nops_integration_role.id
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Effect   = "Allow"
-        Action   = ["events:CreateEventBus"]
-        Resource = "*"
-      }
-    ]
-  })
-}
-
 resource "aws_iam_role_policy" "nops_system_bucket_policy" {
-  count = local.is_master_account && var.system_bucket_name != "na" ? 1 : 0
+  count = local.is_master_account && local.system_bucket_name != "na" ? 1 : 0
   name  = "NopsSystemBucketPolicy"
   role  = aws_iam_role.nops_integration_role.id
 

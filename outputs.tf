@@ -1,11 +1,11 @@
 output "project_aws_list" {
   description = "List of projects in nOps"
-  value       = jsondecode(data.http.check_project_aws.response_body)
+  value       = try(jsondecode(data.http.check_project_aws.response_body), "")
 }
 
 output "current_client_id" {
   description = "The client ID of the current account in nOps"
-  value       = jsondecode(data.http.check_current_client.response_body).id
+  value       = try(jsondecode(data.http.check_current_client.response_body), {id = ""}).id
 }
 
 output "master_account_id" {
@@ -30,7 +30,7 @@ output "nops_integration_status" {
 
 output "system_bucket_name" {
   description = "The name of the S3 bucket (if created)"
-  value       = local.create_bucket ? var.system_bucket_name : "na"
+  value       = local.create_bucket ? local.system_bucket_name : "na"
 }
 
 output "project_status" {
@@ -40,8 +40,7 @@ output "project_status" {
 
 output "notify_nops_integration_complete_status" {
   description = "Status of the nOps integration notification"
-  value = jsonencode(local.should_proceed ? jsondecode(data.http.notify_nops_integration_complete[0].response_body) : { "message" : "Integration skipped: Project already exists" }
-  )
+  value = local.should_proceed ? try(jsondecode(data.http.notify_nops_integration_complete[0].response_body), {}) : { message = "Integration skipped: Project already exists" }
 }
 
 output "is_master_account_out" {

@@ -148,10 +148,13 @@ No modules.
 | Name | Type |
 |------|------|
 | [aws_iam_role.nops_integration_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
-| [aws_iam_role_policy.nops_eventbridge_integration_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
+| [aws_iam_role_policy.nops_compute_copilot_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
+| [aws_iam_role_policy.nops_essentials_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
 | [aws_iam_role_policy.nops_integration_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
 | [aws_iam_role_policy.nops_system_bucket_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
+| [aws_iam_role_policy.nops_wafr_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
 | [aws_s3_bucket.nops_system_bucket](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket) | resource |
+| [aws_s3_bucket_policy.nops_bucket_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_policy) | resource |
 | [aws_s3_bucket_server_side_encryption_configuration.nops_bucket_encryption](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_server_side_encryption_configuration) | resource |
 | [null_resource.check_api_errors](https://registry.terraform.io/providers/hashicorp/null/3.2.3/docs/resources/resource) | resource |
 | [null_resource.check_existing_project](https://registry.terraform.io/providers/hashicorp/null/3.2.3/docs/resources/resource) | resource |
@@ -171,10 +174,12 @@ No modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_api_key"></a> [api\_key](#input\_api\_key) | The nOps API key | `string` | n/a | yes |
-| <a name="input_nops_principal"></a> [nops\_principal](#input\_nops\_principal) | The nOps principal account number | `string` | `"202279780353"` | no |
+| <a name="input_compute_copilot"></a> [compute\_copilot](#input\_compute\_copilot) | If true, the IAM policy required for nOps compute copilot will be created. | `bool` | `true` | no |
+| <a name="input_essentials"></a> [essentials](#input\_essentials) | If true, the IAM policy required for nOps essentials will be created. | `bool` | `true` | no |
 | <a name="input_nops_url"></a> [nops\_url](#input\_nops\_url) | The nOps base URL | `string` | `"https://app.nops.io/"` | no |
 | <a name="input_reconfigure"></a> [reconfigure](#input\_reconfigure) | If true, allows overriding existing project settings. If false, stops execution if project already exists. | `bool` | `false` | no |
 | <a name="input_system_bucket_name"></a> [system\_bucket\_name](#input\_system\_bucket\_name) | The name of the system bucket for nOps integration | `string` | n/a | yes |
+| <a name="input_wafr"></a> [wafr](#input\_wafr) | If true, the IAM policy required for nOps WAFR will be created. | `bool` | `true` | no |
 
 ## Outputs
 

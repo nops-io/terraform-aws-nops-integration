@@ -38,7 +38,6 @@ resource "time_sleep" "wait_for_iam_role" {
   depends_on = [
     aws_iam_role.nops_integration_role,
     aws_iam_role_policy.nops_integration_policy,
-    aws_iam_role_policy.nops_eventbridge_integration_policy,
     aws_iam_role_policy.nops_system_bucket_policy
   ]
 
@@ -52,7 +51,7 @@ resource "time_sleep" "wait_for_iam_role" {
 data "http" "notify_nops_integration_complete" {
   count = local.should_proceed ? 1 : 0
 
-  url    = "${var.nops_url}c/aws/integration/"
+  url    = "${local.nops_url}c/aws/integration/"
   method = "POST"
 
   request_headers = {
@@ -64,10 +63,10 @@ data "http" "notify_nops_integration_complete" {
   request_body = jsonencode({
     external_id = local.external_id
     role_arn    = aws_iam_role.nops_integration_role.arn
-    bucket_name = local.create_bucket ? var.system_bucket_name : "na"
+    bucket_name = local.create_bucket ? local.system_bucket_name : "na"
     RequestType = local.project_count == 0 ? "Create" : "Update"
     ResourceProperties = {
-      ServiceBucket = local.create_bucket ? var.system_bucket_name : "na"
+      ServiceBucket = local.create_bucket ? local.system_bucket_name : "na"
       AWSAccountID  = local.account_id
       RoleArn       = aws_iam_role.nops_integration_role.arn
       ExternalID    = local.external_id
