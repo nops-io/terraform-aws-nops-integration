@@ -75,14 +75,10 @@ resource "aws_iam_role_policy" "nops_essentials_policy" {
         Effect = "Allow"
         Action = [
           "cloudwatch:ListMetrics",
+          "events:CreateEventBus"
         ],
         Resource = "*"
       },
-      {
-        Effect   = "Allow"
-        Action   = ["events:CreateEventBus"]
-        Resource = "*"
-      }
     ]
   })
 }
