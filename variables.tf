@@ -1,9 +1,3 @@
-variable "nops_url" {
-  type        = string
-  default     = "https://app.nops.io/"
-  description = "The nOps base URL"
-}
-
 variable "api_key" {
   type        = string
   description = "The nOps API key"

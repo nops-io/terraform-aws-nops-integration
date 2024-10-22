@@ -7,8 +7,6 @@ resource "aws_s3_bucket" "nops_system_bucket" {
     prevent_destroy = false
     ignore_changes  = all
   }
-
-  depends_on = [time_sleep.wait_for_iam_role]
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "nops_bucket_encryption" {
