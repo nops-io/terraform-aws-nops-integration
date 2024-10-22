@@ -143,8 +143,6 @@ resource "aws_iam_role_policy" "nops_integration_policy" {
           "rds:DescribeDBInstances",
           "rds:DescribeDBSnapshots",
           "redshift:DescribeClusters",
-          "s3:ListBucket",
-          "s3:ListAllMyBuckets",
           "savingsplans:DescribeSavingsPlans",
           "support:DescribeTrustedAdvisorCheckRefreshStatuses",
           "support:DescribeTrustedAdvisorCheckResult",
@@ -170,6 +168,7 @@ resource "aws_iam_role_policy" "nops_system_bucket_policy" {
       {
         Effect = "Allow"
         Action = [
+          "s3:ListBucket",
           "s3:GetBucketPolicy",
           "s3:GetEncryptionConfiguration",
           "s3:GetBucketVersioning",
