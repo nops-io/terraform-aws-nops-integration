@@ -42,8 +42,13 @@ resource "aws_iam_role_policy" "nops_wafr_policy" {
         Effect = "Allow"
         Action = [
           "cloudtrail:DescribeTrails",
+          "cloudtrail:LookupEvents",
           "config:DescribeConfigurationRecorders",
+          "iam:ListUsers",
           "inspector:ListAssessmentRuns",
+          "ec2:DescribeFlowLogs",
+          "ec2:DescribeSnapshots",
+          "ec2:DescribeRouteTables",
           "wellarchitected:*",
         ]
         Resource = "*"
@@ -110,6 +115,7 @@ resource "aws_iam_role_policy" "nops_integration_policy" {
           "ce:ListCostAllocationTags",
           "ce:UpdateCostAllocationTagsStatus",
           "ce:GetCostAndUsage",
+          "ce:GetReservationPurchaseRecommendation",
           "config:DescribeConfigurationRecorders",
           "cur:DescribeReportDefinitions",
           "cur:PutReportDefinition",
@@ -122,6 +128,8 @@ resource "aws_iam_role_policy" "nops_integration_policy" {
           "ec2:DescribeReservedInstances",
           "ec2:DescribeVolumes",
           "ec2:DescribeVpcs",
+          "ec2:DescribeAvailabilityZones",
+          "ec2:DescribeInstanceStatus",
           "ecs:ListClusters",
           "eks:ListClusters",
           "elasticache:DescribeCacheClusters",
@@ -143,6 +151,7 @@ resource "aws_iam_role_policy" "nops_integration_policy" {
           "rds:DescribeDBInstances",
           "rds:DescribeDBSnapshots",
           "redshift:DescribeClusters",
+          "s3:ListAllMyBuckets",
           "savingsplans:DescribeSavingsPlans",
           "support:DescribeTrustedAdvisorCheckRefreshStatuses",
           "support:DescribeTrustedAdvisorCheckResult",
@@ -173,10 +182,13 @@ resource "aws_iam_role_policy" "nops_system_bucket_policy" {
           "s3:GetEncryptionConfiguration",
           "s3:GetBucketVersioning",
           "s3:GetBucketPolicyStatus",
+          "s3:GetBucketLocation",
           "s3:GetBucketAcl",
           "s3:GetBucketLogging",
+          "s3:GetObject",
           "s3:PutBucketPolicy",
-          "s3:PutObject"
+          "s3:PutObject",
+          "s3:HeadBucket"
         ]
         Resource = [
           "arn:aws:s3:::${local.bucket_name}",
