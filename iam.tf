@@ -43,13 +43,19 @@ resource "aws_iam_role_policy" "nops_wafr_policy" {
         Action = [
           "cloudtrail:DescribeTrails",
           "cloudtrail:LookupEvents",
+          "cloudwatch:GetMetricStatistics",
           "config:DescribeConfigurationRecorders",
           "iam:ListUsers",
+          "iam:GetRole",
+          "iam:GetAccountSummary",
+          "iam:GetAccountPasswordPolicy",
+          "iam:ListAttachedUserPolicies",
           "inspector:ListAssessmentRuns",
           "ec2:DescribeFlowLogs",
           "ec2:DescribeSnapshots",
           "ec2:DescribeRouteTables",
           "wellarchitected:*",
+          "workspaces:DescribeWorkspaceDirectories"
         ]
         Resource = "*"
       }
@@ -152,13 +158,13 @@ resource "aws_iam_role_policy" "nops_integration_policy" {
           "rds:DescribeDBSnapshots",
           "redshift:DescribeClusters",
           "s3:ListAllMyBuckets",
+          "s3:GetBucketVersioning",
           "savingsplans:DescribeSavingsPlans",
           "support:DescribeTrustedAdvisorCheckRefreshStatuses",
           "support:DescribeTrustedAdvisorCheckResult",
           "support:DescribeTrustedAdvisorChecks",
           "tagging:GetResources",
           "organizations:ListAccounts",
-          "workspaces:DescribeWorkspaceDirectories"
         ]
         Resource = "*"
       }
