@@ -5,7 +5,7 @@ output "project_aws_list" {
 
 output "current_client_id" {
   description = "The client ID of the current account in nOps"
-  value       = try(jsondecode(data.http.check_current_client.response_body), {id = ""}).id
+  value       = try(jsondecode(data.http.check_current_client.response_body), { id = "" }).id
 }
 
 output "master_account_id" {
@@ -40,7 +40,7 @@ output "project_status" {
 
 output "notify_nops_integration_complete_status" {
   description = "Status of the nOps integration notification"
-  value = local.should_proceed ? try(jsondecode(data.http.notify_nops_integration_complete[0].response_body), {}) : { message = "Integration skipped: Project already exists" }
+  value       = local.should_proceed ? try(jsondecode(data.http.notify_nops_integration_complete[0].response_body), {}) : { message = "Integration skipped: Project already exists" }
 }
 
 output "is_master_account_out" {

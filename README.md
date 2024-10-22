@@ -100,7 +100,7 @@ terraform import module.tf_onboarding.aws_iam_role.nops_integration_role NopsInt
 If the above yields the following error
 ```
 │ Error: Resource already managed by Terraform
-│ 
+│
 │ Terraform is already managing a remote object for aws_iam_role.nops_integration_role. To import to this address you must first remove the existing object from the state.
 ```
 
@@ -176,7 +176,7 @@ No modules.
 | [null_resource.force_new_role](https://registry.terraform.io/providers/hashicorp/null/3.2.3/docs/resources/resource) | resource |
 | [null_resource.project_check](https://registry.terraform.io/providers/hashicorp/null/3.2.3/docs/resources/resource) | resource |
 | [null_resource.reconfigure_trigger](https://registry.terraform.io/providers/hashicorp/null/3.2.3/docs/resources/resource) | resource |
-| [time_sleep.wait_for_iam_role](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
+| [time_sleep.wait_for_resources](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
 | [aws_organizations_organization.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/organizations_organization) | data source |
 | [http_http.check_current_client](https://registry.terraform.io/providers/hashicorp/http/latest/docs/data-sources/http) | data source |
@@ -191,9 +191,7 @@ No modules.
 | <a name="input_api_key"></a> [api\_key](#input\_api\_key) | The nOps API key | `string` | n/a | yes |
 | <a name="input_compute_copilot"></a> [compute\_copilot](#input\_compute\_copilot) | If true, the IAM policy required for nOps compute copilot will be created. | `bool` | `true` | no |
 | <a name="input_essentials"></a> [essentials](#input\_essentials) | If true, the IAM policy required for nOps essentials will be created. | `bool` | `true` | no |
-| <a name="input_nops_url"></a> [nops\_url](#input\_nops\_url) | The nOps base URL | `string` | `"https://app.nops.io/"` | no |
 | <a name="input_reconfigure"></a> [reconfigure](#input\_reconfigure) | If true, allows overriding existing project settings. If false, stops execution if project already exists. | `bool` | `false` | no |
-| <a name="input_system_bucket_name"></a> [system\_bucket\_name](#input\_system\_bucket\_name) | The name of the system bucket for nOps integration | `string` | n/a | yes |
 | <a name="input_wafr"></a> [wafr](#input\_wafr) | If true, the IAM policy required for nOps WAFR will be created. | `bool` | `true` | no |
 
 ## Outputs
