@@ -96,6 +96,10 @@ resource "aws_iam_role_policy" "nops_compute_copilot_policy" {
         Effect = "Allow"
         Action = [
           "autoscaling:DescribeAutoScalingGroups",
+          "ec2:DescribeLaunchTemplateVersions",
+          "ec2:DescribeLaunchConfigurations",
+          "ec2:describeImages",
+          "lambda:InvokeFunction",
           "cloudformation:ListStacks",
           "cloudformation:DescribeStacks",
         ]

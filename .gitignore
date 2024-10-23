@@ -31,3 +31,5 @@ terraform.rc
 *.zip
 
 tests/**
+
+.idea
