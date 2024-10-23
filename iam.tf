@@ -161,6 +161,7 @@ resource "aws_iam_role_policy" "nops_integration_policy" {
           "support:DescribeTrustedAdvisorChecks",
           "tagging:GetResources",
           "organizations:ListAccounts",
+          "organizations:DescribeOrganization"
         ]
         Resource = "*"
       }
