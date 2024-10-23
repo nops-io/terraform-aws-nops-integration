@@ -45,6 +45,7 @@ resource "aws_iam_role_policy" "nops_wafr_policy" {
           "cloudtrail:LookupEvents",
           "cloudwatch:GetMetricStatistics",
           "config:DescribeConfigurationRecorders",
+          "dynamodb:DescribeTable",
           "iam:ListUsers",
           "iam:GetRole",
           "iam:GetAccountSummary",
@@ -159,9 +160,10 @@ resource "aws_iam_role_policy" "nops_integration_policy" {
           "support:DescribeTrustedAdvisorCheckRefreshStatuses",
           "support:DescribeTrustedAdvisorCheckResult",
           "support:DescribeTrustedAdvisorChecks",
-          "tagging:GetResources",
+          "tag:GetResources",
           "organizations:ListAccounts",
-          "organizations:DescribeOrganization"
+          "organizations:DescribeOrganization",
+          "organizations:ListRoots"
         ]
         Resource = "*"
       }
