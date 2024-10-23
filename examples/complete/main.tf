@@ -15,9 +15,8 @@ module "onboarding_payer_account" {
   providers = {
     aws = aws.root
   }
-  source             = "../../"
-  api_key            = "xxxxx-xxx"
-  system_bucket_name = "custom_bucket_name"
+  source  = "../../"
+  api_key = "xxxxx-xxx"
   # reconfigure will trigger an update if a project exists, this is to avoid updating unwanted projects.
   reconfigure = true
 }
@@ -35,9 +34,8 @@ module "onboarding_child_account" {
   providers = {
     aws = aws.child_1
   }
-  source             = "../../"
-  api_key            = "xxxxx-xxx"
-  system_bucket_name = "custom_bucket_name"
+  source  = "../../"
+  api_key = "xxxxx-xxx"
   # Required after the first run to update the created project
   reconfigure = true
 }
