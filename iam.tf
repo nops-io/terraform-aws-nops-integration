@@ -98,7 +98,7 @@ resource "aws_iam_role_policy" "nops_compute_copilot_policy" {
           "autoscaling:DescribeAutoScalingGroups",
           "ec2:DescribeLaunchTemplateVersions",
           "ec2:DescribeLaunchConfigurations",
-          "ec2:describeImages",
+          "ec2:DescribeImages",
           "lambda:InvokeFunction",
           "cloudformation:ListStacks",
           "cloudformation:DescribeStacks",
