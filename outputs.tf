@@ -1,11 +1,11 @@
 output "project_aws_list" {
   description = "List of projects in nOps"
-  value       = jsondecode(data.http.check_project_aws.response_body)
+  value       = try(jsondecode(data.http.check_project_aws.response_body), "")
 }
 
 output "current_client_id" {
   description = "The client ID of the current account in nOps"
-  value       = jsondecode(data.http.check_current_client.response_body).id
+  value       = try(jsondecode(data.http.check_current_client.response_body), { id = "" }).id
 }
 
 output "master_account_id" {
@@ -20,28 +20,27 @@ output "is_master_account" {
 
 output "role_arn" {
   description = "The ARN of the IAM role"
-  value       = local.should_proceed ? aws_iam_role.nops_integration_role.arn : "Integration skipped: Project already exists"
+  value       = aws_iam_role.nops_integration_role.arn
 }
 
 output "nops_integration_status" {
   description = "Indicates if the nOps integration notification was sent"
-  value       = local.should_proceed ? "Notification sent to nOps" : "Integration skipped: Project already exists"
+  value       = local.project_count == 0 ? "Notification sent to nOps" : "Integration skipped: Project already exists"
 }
 
 output "system_bucket_name" {
   description = "The name of the S3 bucket (if created)"
-  value       = local.create_bucket ? var.system_bucket_name : "na"
+  value       = local.create_bucket ? local.system_bucket_name : "na"
 }
 
 output "project_status" {
   description = "Status of the nOps project for this account"
-  value       = local.project_count == 0 ? "New project created" : (local.project_count == 1 && var.reconfigure ? "Existing project updated" : (local.project_count == 1 && !var.reconfigure ? "Existing project found, integration skipped" : "Error: Multiple projects found"))
+  value       = local.project_count == 0 ? "New project created" : "Existing project updated"
 }
 
 output "notify_nops_integration_complete_status" {
   description = "Status of the nOps integration notification"
-  value = jsonencode(local.should_proceed ? jsondecode(data.http.notify_nops_integration_complete[0].response_body) : { "message" : "Integration skipped: Project already exists" }
-  )
+  value       = local.project_count == 0 ? try(jsondecode(data.http.notify_nops_integration_complete[0].response_body), { "message" = "" }) : { message = "Integration skipped: Project already exists" }
 }
 
 output "is_master_account_out" {

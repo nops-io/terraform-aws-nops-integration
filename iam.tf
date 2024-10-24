@@ -7,7 +7,7 @@ resource "aws_iam_role" "nops_integration_role" {
       {
         Effect = "Allow"
         Principal = {
-          AWS = "arn:aws:iam::${var.nops_principal}:root"
+          AWS = "arn:aws:iam::${local.nops_principal}:root"
         }
         Action = "sts:AssumeRole"
         Condition = {
@@ -19,17 +19,88 @@ resource "aws_iam_role" "nops_integration_role" {
     ]
   })
 
-  managed_policy_arns = ["arn:aws:iam::aws:policy/ReadOnlyAccess"]
-
   tags = {
-    version   = "1.1.0"
-    createdat = formatdate("YYYYMMDD", timestamp())
+    version = "1.1.0"
   }
-  depends_on = [null_resource.force_new_role]
-  lifecycle {
-    create_before_destroy = true
-    replace_triggered_by  = [null_resource.reconfigure_trigger.id]
-  }
+}
+
+resource "aws_iam_role_policy" "nops_wafr_policy" {
+  count = var.wafr ? 1 : 0
+  name  = "NopsWAFRPolicy"
+  role  = aws_iam_role.nops_integration_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "cloudtrail:DescribeTrails",
+          "cloudtrail:LookupEvents",
+          "cloudwatch:GetMetricStatistics",
+          "config:DescribeConfigurationRecorders",
+          "dynamodb:DescribeTable",
+          "iam:ListUsers",
+          "iam:GetRole",
+          "iam:GetAccountSummary",
+          "iam:GetAccountPasswordPolicy",
+          "iam:ListAttachedUserPolicies",
+          "inspector:ListAssessmentRuns",
+          "ec2:DescribeFlowLogs",
+          "ec2:DescribeSnapshots",
+          "ec2:DescribeRouteTables",
+          "wellarchitected:*",
+          "workspaces:DescribeWorkspaceDirectories"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy" "nops_essentials_policy" {
+  count = var.essentials ? 1 : 0
+  name  = "NopsEssentialsPolicy"
+  role  = aws_iam_role.nops_integration_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "cloudwatch:ListMetrics",
+          "events:CreateEventBus"
+        ],
+        Resource = "*"
+      },
+    ]
+  })
+}
+
+resource "aws_iam_role_policy" "nops_compute_copilot_policy" {
+  count = var.compute_copilot ? 1 : 0
+  name  = "NopsComputeCopilotPolicy"
+  role  = aws_iam_role.nops_integration_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "autoscaling:DescribeAutoScalingGroups",
+          "ec2:DescribeLaunchTemplateVersions",
+          "ec2:DescribeLaunchConfigurations",
+          "ec2:DescribeImages",
+          "lambda:InvokeFunction",
+          "cloudformation:ListStacks",
+          "cloudformation:DescribeStacks",
+        ]
+        Resource = "*"
+      }
+    ]
+  })
 }
 
 resource "aws_iam_role_policy" "nops_integration_policy" {
@@ -42,230 +113,58 @@ resource "aws_iam_role_policy" "nops_integration_policy" {
       {
         Effect = "Allow"
         Action = [
-          "cur:DescribeReportDefinitions",
-          "cur:DeleteReportDefinition",
-          "cur:PutReportDefinition",
           "ce:ListCostAllocationTags",
           "ce:UpdateCostAllocationTagsStatus",
+          "ce:GetCostAndUsage",
+          "ce:GetReservationPurchaseRecommendation",
+          "config:DescribeConfigurationRecorders",
+          "cur:DescribeReportDefinitions",
+          "cur:PutReportDefinition",
+          "dynamodb:ListTables",
+          "ec2:DescribeImages",
+          "ec2:DescribeInstances",
+          "ec2:DescribeNatGateways",
+          "ec2:DescribeNetworkInterfaces",
+          "ec2:DescribeRegions",
+          "ec2:DescribeReservedInstances",
+          "ec2:DescribeVolumes",
+          "ec2:DescribeVpcs",
+          "ec2:DescribeAvailabilityZones",
+          "ec2:DescribeInstanceStatus",
+          "ecs:ListClusters",
+          "eks:ListClusters",
+          "eks:DescribeCluster",
+          "eks:DescribeNodegroup",
+          "elasticache:DescribeCacheClusters",
+          "elasticache:DescribeCacheSubnetGroups",
+          "elasticfilesystem:DescribeFileSystems",
+          "elasticloadbalancing:DescribeLoadBalancers",
+          "es:DescribeElasticsearchDomains",
+          "es:ListDomainNames",
+          "events:ListRules",
+          "guardduty:ListDetectors",
+          "iam:ListRoles",
+          "iam:ListAccountAliases",
+          "kms:Decrypt",
+          "lambda:GetFunction",
+          "lambda:GetPolicy",
+          "lambda:ListFunctions",
           "organizations:InviteAccountToOrganization",
-          "s3:ListBucket",
+          "rds:DescribeDBClusters",
+          "rds:DescribeDBInstances",
+          "rds:DescribeDBSnapshots",
+          "redshift:DescribeClusters",
+          "s3:ListAllMyBuckets",
+          "s3:GetBucketVersioning",
+          "savingsplans:DescribeSavingsPlans",
           "support:DescribeTrustedAdvisorCheckRefreshStatuses",
           "support:DescribeTrustedAdvisorCheckResult",
           "support:DescribeTrustedAdvisorChecks",
-          "wellarchitected:*",
-          "ce:*"
+          "tag:GetResources",
+          "organizations:ListAccounts",
+          "organizations:DescribeOrganization",
+          "organizations:ListRoots"
         ]
-        Resource = "*"
-      },
-      {
-        Effect = "Deny"
-        Action = [
-          "acm-pca:Describe*",
-          "acm-pca:Get*",
-          "acm-pca:List*",
-          "acm:Describe*",
-          "acm:Get*",
-          "acm:List*",
-          "apigateway:GET",
-          "appconfig:GetConfiguration*",
-          "appflow:DescribeConnector*",
-          "appflow:ListConnector*",
-          "appstream:DescribeDirectoryConfigs",
-          "appstream:DescribeUsers",
-          "appstream:DescribeSessions",
-          "appsync:Get*",
-          "appsync:List*",
-          "athena:Get*",
-          "athena:List*",
-          "backup:GetBackupVaultAccessPolicy",
-          "cassandra:Select",
-          "chime:Describe*",
-          "chime:Get*",
-          "chime:List*",
-          "cloud9:Describe*",
-          "cloud9:Get*",
-          "cloud9:List*",
-          "clouddirectory:Get*",
-          "clouddirectory:List*",
-          "cloudfront:GetCloudFrontOriginAccessIdentity",
-          "cloudfront:GetFieldLevelEncryption*",
-          "cloudfront:GetKeyGroupConfig",
-          "cloudwatch:GetMetricData",
-          "cloudwatch:GetMetricStream",
-          "cloudwatch:ListMetricStreams",
-          "codeartifact:GetAuthorizationToken",
-          "codeartifact:ReadFromRepository",
-          "codebuild:BatchGet*",
-          "codebuild:ListSourceCredentials",
-          "codecommit:BatchGet*",
-          "codecommit:Get*",
-          "codecommit:GitPull",
-          "codedeploy:BatchGet*",
-          "codedeploy:Get*",
-          "codestar:DescribeUserProfile",
-          "codestar:ListUserProfiles",
-          "cognito-identity:*",
-          "cognito-idp:*",
-          "cognito-sync:*",
-          "comprehend:Describe*",
-          "comprehend:List*",
-          "config:BatchGetAggregateResourceConfig",
-          "config:BatchGetResourceConfig",
-          "config:SelectAggregateResourceConfig",
-          "config:SelectResourceConfig",
-          "connect:Describe*",
-          "connect:Get*",
-          "connect:List*",
-          "datapipeline:DescribeObjects",
-          "datapipeline:EvaluateExpression",
-          "datapipeline:QueryObjects",
-          "dax:BatchGetItem",
-          "dax:GetItem",
-          "dax:Query",
-          "deepcomposer:Get*",
-          "deepcomposer:List*",
-          "devicefarm:GetRemoteAccessSession",
-          "devicefarm:ListRemoteAccessSessions",
-          "directconnect:Describe*",
-          "directconnect:List*",
-          "discovery:Describe*",
-          "discovery:Get*",
-          "discovery:List*",
-          "dms:Describe*",
-          "dms:List*",
-          "ds:Get*",
-          "dynamodb:GetItem",
-          "dynamodb:BatchGetItem",
-          "dynamodb:Query",
-          "dynamodb:Scan",
-          "ec2:GetConsoleScreenshot",
-          "ecr:BatchGetImage",
-          "ecr:GetAuthorizationToken",
-          "ecr:GetDownloadUrlForLayer",
-          "ecr-public:GetAuthorizationToken",
-          "eks:DescribeIdentityProviderConfig",
-          "elasticbeanstalk:DescribeConfigurationOptions",
-          "elasticbeanstalk:DescribeConfigurationSettings",
-          "es:ESHttpGet*",
-          "fis:GetExperimentTemplate",
-          "fms:GetAdminAccount",
-          "frauddetector:BatchGetVariable",
-          "frauddetector:Get*",
-          "gamelift:GetGameSessionLogUrl",
-          "gamelift:GetInstanceAccess",
-          "geo:ListDevicePositions",
-          "glue:GetSecurityConfiguration*",
-          "glue:SearchTables",
-          "glue:GetTable*",
-          "guardduty:GetIPSet",
-          "guardduty:GetMasterAccount",
-          "guardduty:GetMembers",
-          "guardduty:ListMembers",
-          "guardduty:ListOrganizationAdminAccounts",
-          "inspector2:GetConfiguration",
-          "imagebuilder:GetImage",
-          "iotroborunner:Get*",
-          "iotsitewise:ListAccessPolicies",
-          "ivs:GetPlaybackKeyPair",
-          "ivs:GetStreamSession",
-          "kafka:GetBootstrapBrokers",
-          "kendra:Query*",
-          "kinesis:Get*",
-          "kms:DescribeKey",
-          "kms:GetPublicKey",
-          "lex:Get*",
-          "lambda:GetFunctionConfiguration",
-          "license-manager:GetGrant",
-          "license-manager:GetLicense",
-          "license-manager:ListTokens",
-          "lightsail:GetBucketAccessKeys",
-          "lightsail:GetCertificates",
-          "lightsail:GetContainerImages",
-          "lightsail:GetKeyPair",
-          "lightsail:GetRelationalDatabaseLogStreams",
-          "logs:GetLogEvents",
-          "logs:StartQuery",
-          "machinelearning:GetMLModel",
-          "macie2:GetAdministratorAccount",
-          "macie2:GetMember",
-          "macie2:GetMacieSession",
-          "macie2:SearchResources",
-          "macie2:GetSensitiveDataOccurrences",
-          "nimble:GetStreamingSession",
-          "polly:SynthesizeSpeech",
-          "proton:GetEnvironmentTemplate",
-          "proton:GetServiceTemplate",
-          "proton:ListServiceTemplates",
-          "proton:ListEnvironmentTemplates",
-          "qldb:GetBlock",
-          "qldb:GetDigest",
-          "rds:Download*",
-          "rekognition:CompareFaces",
-          "rekognition:Detect*",
-          "rekognition:Search*",
-          "resiliencehub:DescribeAppVersionTemplate",
-          "resiliencehub:ListRecommendationTemplates",
-          "robomaker:GetWorldTemplateBody",
-          "s3-object-lambda:GetObject",
-          "sagemaker:Search",
-          "schemas:GetDiscoveredSchema",
-          "sdb:Get*",
-          "sdb:Select*",
-          "secretsmanager:*",
-          "securityhub:GetFindings",
-          "securityhub:GetMembers",
-          "securityhub:ListMembers",
-          "ses:GetTemplate",
-          "ses:GetEmailTemplate",
-          "ses:GetContact",
-          "ses:GetContactList",
-          "ses:ListTemplates",
-          "ses:ListEmailTemplates",
-          "ses:ListVerifiedEmailAddresses",
-          "signer:GetSigningProfile",
-          "signer:ListProfilePermissions",
-          "signer:ListSigningProfiles",
-          "sms-voice:DescribeKeywords",
-          "sms-voice:DescribeOptedOutNumbers",
-          "sms-voice:DescribePhoneNumbers",
-          "sms-voice:DescribePools",
-          "snowball:Describe*",
-          "sqs:Receive*",
-          "ssm-contacts:*",
-          "ssm:DescribeParameters*",
-          "ssm:GetParameter*",
-          "sso:Describe*",
-          "sso:Get*",
-          "sso:List*",
-          "storagegateway:DescribeChapCredentials",
-          "support:DescribeCommunications",
-          "timestream:ListDatabases",
-          "timestream:ListTables",
-          "transcribe:Get*",
-          "transcribe:List*",
-          "transfer:Describe*",
-          "transfer:List*",
-          "waf-regional:GetChangeToken",
-          "workmail:DescribeUser",
-          "workmail:GetMailUserDetails",
-          "workmail:ListUsers"
-        ]
-        Resource = "*"
-      }
-    ]
-  })
-}
-
-resource "aws_iam_role_policy" "nops_eventbridge_integration_policy" {
-  name = "NopsEventBridgeIntegrationPolicy"
-  role = aws_iam_role.nops_integration_role.id
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Effect   = "Allow"
-        Action   = ["events:CreateEventBus"]
         Resource = "*"
       }
     ]
@@ -273,7 +172,7 @@ resource "aws_iam_role_policy" "nops_eventbridge_integration_policy" {
 }
 
 resource "aws_iam_role_policy" "nops_system_bucket_policy" {
-  count = local.is_master_account && var.system_bucket_name != "na" ? 1 : 0
+  count = local.is_master_account && local.system_bucket_name != "na" ? 1 : 0
   name  = "NopsSystemBucketPolicy"
   role  = aws_iam_role.nops_integration_role.id
 
@@ -282,10 +181,23 @@ resource "aws_iam_role_policy" "nops_system_bucket_policy" {
     Statement = [
       {
         Effect = "Allow"
-        Action = ["s3:*"]
+        Action = [
+          "s3:ListBucket",
+          "s3:GetBucketPolicy",
+          "s3:GetEncryptionConfiguration",
+          "s3:GetBucketVersioning",
+          "s3:GetBucketPolicyStatus",
+          "s3:GetBucketLocation",
+          "s3:GetBucketAcl",
+          "s3:GetBucketLogging",
+          "s3:GetObject",
+          "s3:PutBucketPolicy",
+          "s3:PutObject",
+          "s3:HeadBucket"
+        ]
         Resource = [
-          "arn:aws:s3:::${local.bucket_name}",
-          "arn:aws:s3:::${local.bucket_name}/*"
+          "arn:aws:s3:::${local.system_bucket_name}",
+          "arn:aws:s3:::${local.system_bucket_name}/*"
         ]
       }
     ]

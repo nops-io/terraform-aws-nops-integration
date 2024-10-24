@@ -1,27 +1,23 @@
-variable "nops_url" {
-  type        = string
-  default     = "https://app.nops.io/"
-  description = "The nOps base URL"
-}
-
-variable "nops_principal" {
-  type        = string
-  default     = "202279780353"
-  description = "The nOps principal account number"
-}
-
 variable "api_key" {
   type        = string
   description = "The nOps API key"
+  sensitive   = true
 }
 
-variable "system_bucket_name" {
-  type        = string
-  description = "The name of the system bucket for nOps integration"
-}
-
-variable "reconfigure" {
+variable "essentials" {
   type        = bool
-  default     = false
-  description = "If true, allows overriding existing project settings. If false, stops execution if project already exists."
+  default     = true
+  description = "If true, the IAM policy required for nOps essentials will be created."
+}
+
+variable "compute_copilot" {
+  type        = bool
+  default     = true
+  description = "If true, the IAM policy required for nOps compute copilot will be created."
+}
+
+variable "wafr" {
+  type        = bool
+  default     = true
+  description = "If true, the IAM policy required for nOps WAFR will be created."
 }

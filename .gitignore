@@ -29,3 +29,7 @@ override.tf.json
 terraform.rc
 
 *.zip
+
+tests/**
+
+.idea

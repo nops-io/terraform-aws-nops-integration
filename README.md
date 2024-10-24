@@ -4,6 +4,8 @@
 
 This Terraform module automates the process of integrating your AWS account with nOps, a cloud management and optimization platform. It streamlines the setup of necessary AWS resources and permissions, enhancing the onboarding experience for nOps users.
 
+![](./assets/Terraform.png)
+
 ## Features
 
 - Automatic detection of existing nOps projects for the AWS account
@@ -18,6 +20,94 @@ This Terraform module automates the process of integrating your AWS account with
 - Terraform v1.0+
 - AWS CLI configured with appropriate permissions
 - nOps API key
+
+## Minimum required IAM permissions
+The following list contains the base IAM permissions required by the `nOps` platform to perform
+the base actions on customer accounts.
+
+| Base permissions required                              |
+|--------------------------------------------------------|
+| `autoscaling:DescribeAutoScalingGroups`                |
+| `autoscaling:DescribeAutoScalingInstances`             |
+| `autoscaling:DescribeLaunchConfigurations `            |
+| `ce:GetCostAndUsage`                                   |
+| `ce:GetReservationPurchaseRecommendation`              |
+| `ce:GetReservationUtilization`                         |
+| `ce:GetSavingsPlansUtilizationDetails`                 |
+| `ce:ListCostAllocationTags`                            |
+| `ce:StartSavingsPlansPurchaseRecommendationGeneration` |
+| `ce:UpdateCostAllocationTagsStatus`                    |
+| `ce:GetSavingsPlansPurchaseRecommendation`             |
+| `cloudformation:DescribeStacks`                        |
+| `cloudformation:ListStacks`                            |
+| `cloudtrail:DescribeTrails`                            |
+| `cloudtrail:LookupEvents`                              |
+| `cloudwatch:GetMetricStatistics`                       |
+| `cloudwatch:ListMetrics`                               |
+| `config:DescribeConfigurationRecorders`                |
+| `cur:DescribeReportDefinitions`                        |
+| `cur:PutReportDefinition`                              |
+| `dynamodb:DescribeTable`                               |
+| `dynamodb:ListTables`                                  |
+| `ec2:DescribeAvailabilityZones`                        |
+| `ec2:DescribeFlowLogs`                                 |
+| `ec2:DescribeImages`                                   |
+| `ec2:DescribeInstances`                                |
+| `ec2:DescribeInstanceStatus`                           |
+| `ec2:DescribeLaunchConfigurations`                     |
+| `ec2:DescribeLaunchTemplateVersions`                   |
+| `ec2:DescribeNatGateways`                              |
+| `ec2:DescribeNetworkInterfaces`                        |
+| `ec2:DescribeRegions`                                  |
+| `ec2:DescribeReservedInstances`                        |
+| `ec2:DescribeRouteTables`                              |
+| `ec2:DescribeSecurityGroups`                           |
+| `ec2:DescribeSnapshots`                                |
+| `ec2:DescribeVolumes`                                  |
+| `ec2:DescribeVpcs`                                     |
+| `ecs:ListClusters`                                     |
+| `eks:DescribeCluster`                                  |
+| `eks:DescribeNodegroup`                                |
+| `eks:ListClusters`                                     |
+| `elasticache:DescribeCacheClusters`                    |
+| `elasticache:DescribeCacheSubnetGroups`                |
+| `elasticfilesystem:DescribeFileSystems`                |
+| `elasticloadbalancing:DescribeLoadBalancers`           |
+| `es:DescribeElasticsearchDomains`                      |
+| `es:ListDomainNames`                                   |
+| `events:CreateEventBus`                                 |
+| `events:ListRules`                                      |
+| `guardduty:ListDetectors`                               |
+| `iam:GetAccountPasswordPolicy`                          |
+| `iam:GetAccountSummary`                                 |
+| `iam:GetRole`                                           |
+| `iam:ListAttachedUserPolicies`                          |
+| `iam:ListRoles`                                         |
+| `iam:ListUsers`                                         |
+| `inspector:ListAssessmentRuns`                          |
+| `kms:Decrypt`                                           |
+| `lambda:GetFunction`                                    |
+| `lambda:GetPolicy`                                      |
+| `lambda:InvokeFunction`                                 |
+| `lambda:ListFunctions`                                  |
+| `organizations:DescribeOrganization`                    |
+| `organizations:InviteAccountToOrganization`             |
+| `organizations:ListAccounts`                            |
+| `organizations:ListRoots`                               |
+| `rds:DescribeDBClusters`                                |
+| `rds:DescribeDBInstances`                               |
+| `rds:DescribeDBSnapshots`                               |
+| `redshift:DescribeClusters`                             |
+| `s3:ListAllMyBuckets`                                    |
+| `savingsplans:DescribeSavingsPlans`                      |
+| `support:DescribeCases`                                  |
+| `support:DescribeTrustedAdvisorCheckRefreshStatuses`     |
+| `support:DescribeTrustedAdvisorCheckResult`              |
+| `support:DescribeTrustedAdvisorChecks`                   |
+| `tag:GetResources`                                       |
+| `wellarchitected:ListLenses`                             |
+| `wellarchitected:ListWorkloads`                          |
+| `workspaces:DescribeWorkspaceDirectories`                |
 
 ## Usage
 
@@ -40,10 +130,7 @@ module tf_onboarding {
   providers = {
     aws = aws.root
   }
-
   source             = "nops-io/nops-integration/aws"
-  # This bucket will be created by the module with the name provided here, make sure its globally unique.
-  system_bucket_name = "example"
   # nOps API key that will be used to authenticate with the nOps platform to onboard the account.
   api_key            = "nops_api_key"
 }
@@ -58,13 +145,15 @@ terraform init
 3. Plan and apply the Terraform configuration:
 
 ```
-terraform apply
+terraform plan -out=plan
+
+terraform apply plan
 ```
 
 If you want to reconfigure an existing nOps account:
 
 ```
-terraform apply -var="reconfigure=true"
+terraform apply plan -var="reconfigure=true"
 ```
 
 or
@@ -84,7 +173,7 @@ module tf_onboarding {
 
 4. Troubleshooting
 
-If you want to reinstall the stack you might got problem like
+If you want to reinstall the stack you might get an error
 
 ```
 │ Error: creating IAM Role (NopsIntegrationRole-xxxxx): EntityAlreadyExists: Role with name NopsIntegrationRole-xxxxx already exists.
@@ -92,8 +181,21 @@ If you want to reinstall the stack you might got problem like
 
 You can import the role to terraform state by running the following command
 ```
-terraform import aws_iam_role.nops_integration_role NopsIntegrationRole-xxxxx
+terraform import module.tf_onboarding.aws_iam_role.nops_integration_role NopsIntegrationRole-xxxxx
 ```
+
+If the above yields the following error
+```
+│ Error: Resource already managed by Terraform
+│
+│ Terraform is already managing a remote object for aws_iam_role.nops_integration_role. To import to this address you must first remove the existing object from the state.
+```
+
+Then execute the following command to remove the failed resource from the state, and then import
+```
+terraform state rm module.tf_onboarding.aws_iam_role.nops_integration_role
+```
+
 ### Onboarding child account
 
 Onboarding child accounts is performed using the same module, it already contains the logic to react when its being applied on any account that is not root
@@ -112,8 +214,6 @@ module tf_onboarding {
   }
 
   source             = "nops-io/nops-integration/aws"
-  # This bucket will be created by the module with the name provided here, make sure its globally unique.
-  system_bucket_name = "example"
   # nOps API key that will be used to authenticate with the nOps platform to onboard the account.
   api_key            = "nops_api_key"
 }
@@ -136,7 +236,6 @@ module tf_onboarding {
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | ~> 4.0 |
 | <a name="provider_http"></a> [http](#provider\_http) | ~> 3.0 |
-| <a name="provider_null"></a> [null](#provider\_null) | 3.2.3 |
 | <a name="provider_time"></a> [time](#provider\_time) | ~> 0.7 |
 
 ## Modules
@@ -148,17 +247,16 @@ No modules.
 | Name | Type |
 |------|------|
 | [aws_iam_role.nops_integration_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
-| [aws_iam_role_policy.nops_eventbridge_integration_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
+| [aws_iam_role_policy.nops_compute_copilot_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
+| [aws_iam_role_policy.nops_essentials_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
 | [aws_iam_role_policy.nops_integration_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
 | [aws_iam_role_policy.nops_system_bucket_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
+| [aws_iam_role_policy.nops_wafr_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
 | [aws_s3_bucket.nops_system_bucket](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket) | resource |
+| [aws_s3_bucket_policy.nops_bucket_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_policy) | resource |
+| [aws_s3_bucket_public_access_block.nops_bucket_block_public_access](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_public_access_block) | resource |
 | [aws_s3_bucket_server_side_encryption_configuration.nops_bucket_encryption](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_server_side_encryption_configuration) | resource |
-| [null_resource.check_api_errors](https://registry.terraform.io/providers/hashicorp/null/3.2.3/docs/resources/resource) | resource |
-| [null_resource.check_existing_project](https://registry.terraform.io/providers/hashicorp/null/3.2.3/docs/resources/resource) | resource |
-| [null_resource.force_new_role](https://registry.terraform.io/providers/hashicorp/null/3.2.3/docs/resources/resource) | resource |
-| [null_resource.project_check](https://registry.terraform.io/providers/hashicorp/null/3.2.3/docs/resources/resource) | resource |
-| [null_resource.reconfigure_trigger](https://registry.terraform.io/providers/hashicorp/null/3.2.3/docs/resources/resource) | resource |
-| [time_sleep.wait_for_iam_role](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
+| [time_sleep.wait_for_resources](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
 | [aws_organizations_organization.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/organizations_organization) | data source |
 | [http_http.check_current_client](https://registry.terraform.io/providers/hashicorp/http/latest/docs/data-sources/http) | data source |
@@ -171,10 +269,9 @@ No modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_api_key"></a> [api\_key](#input\_api\_key) | The nOps API key | `string` | n/a | yes |
-| <a name="input_nops_principal"></a> [nops\_principal](#input\_nops\_principal) | The nOps principal account number | `string` | `"202279780353"` | no |
-| <a name="input_nops_url"></a> [nops\_url](#input\_nops\_url) | The nOps base URL | `string` | `"https://app.nops.io/"` | no |
-| <a name="input_reconfigure"></a> [reconfigure](#input\_reconfigure) | If true, allows overriding existing project settings. If false, stops execution if project already exists. | `bool` | `false` | no |
-| <a name="input_system_bucket_name"></a> [system\_bucket\_name](#input\_system\_bucket\_name) | The name of the system bucket for nOps integration | `string` | n/a | yes |
+| <a name="input_compute_copilot"></a> [compute\_copilot](#input\_compute\_copilot) | If true, the IAM policy required for nOps compute copilot will be created. | `bool` | `true` | no |
+| <a name="input_essentials"></a> [essentials](#input\_essentials) | If true, the IAM policy required for nOps essentials will be created. | `bool` | `true` | no |
+| <a name="input_wafr"></a> [wafr](#input\_wafr) | If true, the IAM policy required for nOps WAFR will be created. | `bool` | `true` | no |
 
 ## Outputs
 

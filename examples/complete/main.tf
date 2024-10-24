@@ -15,11 +15,8 @@ module "onboarding_payer_account" {
   providers = {
     aws = aws.root
   }
-  source             = "../../"
-  api_key            = "xxxxx-xxx"
-  system_bucket_name = "custom_bucket_name"
-  # reconfigure will trigger an update if a project exists, this is to avoid updating unwanted projects.
-  reconfigure = true
+  source  = "../../"
+  api_key = "xxxxx-xxx"
 }
 
 provider "aws" {
@@ -35,11 +32,8 @@ module "onboarding_child_account" {
   providers = {
     aws = aws.child_1
   }
-  source             = "../../"
-  api_key            = "xxxxx-xxx"
-  system_bucket_name = "custom_bucket_name"
-  # Required after the first run to update the created project
-  reconfigure = true
+  source  = "../../"
+  api_key = "xxxxx-xxx"
 }
 
 provider "aws" {
@@ -49,4 +43,12 @@ provider "aws" {
   assume_role {
     role_arn = "arn:aws:iam::123456789123:role/admin-role"
   }
+}
+
+module "onboarding_child_account_2" {
+  providers = {
+    aws = aws.child_2
+  }
+  source  = "../../"
+  api_key = "xxxxx-xxx"
 }
