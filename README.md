@@ -4,6 +4,8 @@
 
 This Terraform module automates the process of integrating your AWS account with nOps, a cloud management and optimization platform. It streamlines the setup of necessary AWS resources and permissions, enhancing the onboarding experience for nOps users.
 
+![](./assets/Terraform.png)
+
 ## Features
 
 - Automatic detection of existing nOps projects for the AWS account
@@ -40,10 +42,7 @@ module tf_onboarding {
   providers = {
     aws = aws.root
   }
-
   source             = "nops-io/nops-integration/aws"
-  # This bucket will be created by the module with the name provided here, make sure its globally unique.
-  system_bucket_name = "example"
   # nOps API key that will be used to authenticate with the nOps platform to onboard the account.
   api_key            = "nops_api_key"
 }
@@ -127,8 +126,6 @@ module tf_onboarding {
   }
 
   source             = "nops-io/nops-integration/aws"
-  # This bucket will be created by the module with the name provided here, make sure its globally unique.
-  system_bucket_name = "example"
   # nOps API key that will be used to authenticate with the nOps platform to onboard the account.
   api_key            = "nops_api_key"
 }
@@ -151,7 +148,6 @@ module tf_onboarding {
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | ~> 4.0 |
 | <a name="provider_http"></a> [http](#provider\_http) | ~> 3.0 |
-| <a name="provider_null"></a> [null](#provider\_null) | 3.2.3 |
 | <a name="provider_time"></a> [time](#provider\_time) | ~> 0.7 |
 
 ## Modules
@@ -170,12 +166,8 @@ No modules.
 | [aws_iam_role_policy.nops_wafr_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
 | [aws_s3_bucket.nops_system_bucket](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket) | resource |
 | [aws_s3_bucket_policy.nops_bucket_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_policy) | resource |
+| [aws_s3_bucket_public_access_block.nops_bucket_block_public_access](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_public_access_block) | resource |
 | [aws_s3_bucket_server_side_encryption_configuration.nops_bucket_encryption](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_server_side_encryption_configuration) | resource |
-| [null_resource.check_api_errors](https://registry.terraform.io/providers/hashicorp/null/3.2.3/docs/resources/resource) | resource |
-| [null_resource.check_existing_project](https://registry.terraform.io/providers/hashicorp/null/3.2.3/docs/resources/resource) | resource |
-| [null_resource.force_new_role](https://registry.terraform.io/providers/hashicorp/null/3.2.3/docs/resources/resource) | resource |
-| [null_resource.project_check](https://registry.terraform.io/providers/hashicorp/null/3.2.3/docs/resources/resource) | resource |
-| [null_resource.reconfigure_trigger](https://registry.terraform.io/providers/hashicorp/null/3.2.3/docs/resources/resource) | resource |
 | [time_sleep.wait_for_resources](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
 | [aws_organizations_organization.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/organizations_organization) | data source |
@@ -191,7 +183,6 @@ No modules.
 | <a name="input_api_key"></a> [api\_key](#input\_api\_key) | The nOps API key | `string` | n/a | yes |
 | <a name="input_compute_copilot"></a> [compute\_copilot](#input\_compute\_copilot) | If true, the IAM policy required for nOps compute copilot will be created. | `bool` | `true` | no |
 | <a name="input_essentials"></a> [essentials](#input\_essentials) | If true, the IAM policy required for nOps essentials will be created. | `bool` | `true` | no |
-| <a name="input_reconfigure"></a> [reconfigure](#input\_reconfigure) | If true, allows overriding existing project settings. If false, stops execution if project already exists. | `bool` | `false` | no |
 | <a name="input_wafr"></a> [wafr](#input\_wafr) | If true, the IAM policy required for nOps WAFR will be created. | `bool` | `true` | no |
 
 ## Outputs

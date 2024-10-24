@@ -21,7 +21,7 @@ data "http" "check_current_client" {
 }
 
 data "http" "create_nops_project" {
-  count = local.should_proceed && local.project_count == 0 ? 1 : 0
+  count = local.project_count == 0 ? 1 : 0
 
 
   url    = "${local.nops_url}c/admin/projectaws/"
@@ -40,7 +40,7 @@ data "http" "create_nops_project" {
 }
 
 data "http" "notify_nops_integration_complete" {
-  count = local.should_proceed ? 1 : 0
+  count = local.notify_success ? 1 : 0
 
   url    = "${local.nops_url}c/aws/integration/"
   method = "POST"
@@ -65,6 +65,6 @@ data "http" "notify_nops_integration_complete" {
   })
 
   depends_on = [
-    time_sleep.wait_for_resources,
+    time_sleep.wait_for_resources
   ]
 }

@@ -20,13 +20,7 @@ resource "aws_iam_role" "nops_integration_role" {
   })
 
   tags = {
-    version   = "1.1.0"
-    createdat = formatdate("YYYYMMDD", timestamp())
-  }
-  depends_on = [null_resource.force_new_role]
-  lifecycle {
-    create_before_destroy = true
-    replace_triggered_by  = [null_resource.reconfigure_trigger.id]
+    version = "1.1.0"
   }
 }
 
@@ -202,8 +196,8 @@ resource "aws_iam_role_policy" "nops_system_bucket_policy" {
           "s3:HeadBucket"
         ]
         Resource = [
-          "arn:aws:s3:::${local.bucket_name}",
-          "arn:aws:s3:::${local.bucket_name}/*"
+          "arn:aws:s3:::${local.system_bucket_name}",
+          "arn:aws:s3:::${local.system_bucket_name}/*"
         ]
       }
     ]

@@ -4,8 +4,7 @@ resource "aws_s3_bucket" "nops_system_bucket" {
   force_destroy = false
 
   lifecycle {
-    prevent_destroy = false
-    ignore_changes  = all
+    ignore_changes = all
   }
 }
 
@@ -20,10 +19,21 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "nops_bucket_encry
   }
 }
 
+resource "aws_s3_bucket_public_access_block" "nops_bucket_block_public_access" {
+  count  = local.create_bucket ? 1 : 0
+  bucket = aws_s3_bucket.nops_system_bucket[0].id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
 resource "aws_s3_bucket_policy" "nops_bucket_policy" {
   count  = local.create_bucket ? 1 : 0
   bucket = aws_s3_bucket.nops_system_bucket[0].id
   policy = jsonencode({
+    Version = "2008-10-17"
     Statement = [
       {
         Effect    = "Deny"
@@ -38,7 +48,7 @@ resource "aws_s3_bucket_policy" "nops_bucket_policy" {
             "aws:SecureTransport" = "false"
           }
         }
-      },
+      }
     ]
   })
 }

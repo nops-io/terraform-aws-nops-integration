@@ -20,12 +20,12 @@ output "is_master_account" {
 
 output "role_arn" {
   description = "The ARN of the IAM role"
-  value       = local.should_proceed ? aws_iam_role.nops_integration_role.arn : "Integration skipped: Project already exists"
+  value       = aws_iam_role.nops_integration_role.arn
 }
 
 output "nops_integration_status" {
   description = "Indicates if the nOps integration notification was sent"
-  value       = local.should_proceed ? "Notification sent to nOps" : "Integration skipped: Project already exists"
+  value       = local.project_count == 0 ? "Notification sent to nOps" : "Integration skipped: Project already exists"
 }
 
 output "system_bucket_name" {
@@ -35,12 +35,12 @@ output "system_bucket_name" {
 
 output "project_status" {
   description = "Status of the nOps project for this account"
-  value       = local.project_count == 0 ? "New project created" : (local.project_count == 1 && var.reconfigure ? "Existing project updated" : (local.project_count == 1 && !var.reconfigure ? "Existing project found, integration skipped" : "Error: Multiple projects found"))
+  value       = local.project_count == 0 ? "New project created" : "Existing project updated"
 }
 
 output "notify_nops_integration_complete_status" {
   description = "Status of the nOps integration notification"
-  value       = local.should_proceed ? try(jsondecode(data.http.notify_nops_integration_complete[0].response_body), {}) : { message = "Integration skipped: Project already exists" }
+  value       = local.project_count == 0 ? try(jsondecode(data.http.notify_nops_integration_complete[0].response_body), { "message" = "" }) : { message = "Integration skipped: Project already exists" }
 }
 
 output "is_master_account_out" {
