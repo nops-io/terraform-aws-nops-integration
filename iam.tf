@@ -139,6 +139,8 @@ resource "aws_iam_role_policy" "nops_integration_policy" {
           "ec2:DescribeInstanceStatus",
           "ecs:ListClusters",
           "eks:ListClusters",
+          "eks:DescribeCluster",
+          "eks:DescribeNodegroup",
           "elasticache:DescribeCacheClusters",
           "elasticache:DescribeCacheSubnetGroups",
           "elasticfilesystem:DescribeFileSystems",
