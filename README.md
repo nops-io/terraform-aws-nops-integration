@@ -21,6 +21,94 @@ This Terraform module automates the process of integrating your AWS account with
 - AWS CLI configured with appropriate permissions
 - nOps API key
 
+## Minimum required IAM permissions
+The following list contains the base IAM permissions required by the `nOps` platform to perform
+the base actions on customer accounts.
+
+| Base permissions required                              |
+|--------------------------------------------------------|
+| `autoscaling:DescribeAutoScalingGroups`                |
+| `autoscaling:DescribeAutoScalingInstances`             |
+| `autoscaling:DescribeLaunchConfigurations `            |
+| `ce:GetCostAndUsage`                                   |
+| `ce:GetReservationPurchaseRecommendation`              |
+| `ce:GetReservationUtilization`                         |
+| `ce:GetSavingsPlansUtilizationDetails`                 |
+| `ce:ListCostAllocationTags`                            |
+| `ce:StartSavingsPlansPurchaseRecommendationGeneration` |
+| `ce:UpdateCostAllocationTagsStatus`                    |
+| `ce:GetSavingsPlansPurchaseRecommendation`             |
+| `cloudformation:DescribeStacks`                        |
+| `cloudformation:ListStacks`                            |
+| `cloudtrail:DescribeTrails`                            |
+| `cloudtrail:LookupEvents`                              |
+| `cloudwatch:GetMetricStatistics`                       |
+| `cloudwatch:ListMetrics`                               |
+| `config:DescribeConfigurationRecorders`                |
+| `cur:DescribeReportDefinitions`                        |
+| `cur:PutReportDefinition`                              |
+| `dynamodb:DescribeTable`                               |
+| `dynamodb:ListTables`                                  |
+| `ec2:DescribeAvailabilityZones`                        |
+| `ec2:DescribeFlowLogs`                                 |
+| `ec2:DescribeImages`                                   |
+| `ec2:DescribeInstances`                                |
+| `ec2:DescribeInstanceStatus`                           |
+| `ec2:DescribeLaunchConfigurations`                     |
+| `ec2:DescribeLaunchTemplateVersions`                   |
+| `ec2:DescribeNatGateways`                              |
+| `ec2:DescribeNetworkInterfaces`                        |
+| `ec2:DescribeRegions`                                  |
+| `ec2:DescribeReservedInstances`                        |
+| `ec2:DescribeRouteTables`                              |
+| `ec2:DescribeSecurityGroups`                           |
+| `ec2:DescribeSnapshots`                                |
+| `ec2:DescribeVolumes`                                  |
+| `ec2:DescribeVpcs`                                     |
+| `ecs:ListClusters`                                     |
+| `eks:DescribeCluster`                                  |
+| `eks:DescribeNodegroup`                                |
+| `eks:ListClusters`                                     |
+| `elasticache:DescribeCacheClusters`                    |
+| `elasticache:DescribeCacheSubnetGroups`                |
+| `elasticfilesystem:DescribeFileSystems`                |
+| `elasticloadbalancing:DescribeLoadBalancers`           |
+| `es:DescribeElasticsearchDomains`                      |
+| `es:ListDomainNames`                                   |
+| `events:CreateEventBus`                                 |
+| `events:ListRules`                                      |
+| `guardduty:ListDetectors`                               |
+| `iam:GetAccountPasswordPolicy`                          |
+| `iam:GetAccountSummary`                                 |
+| `iam:GetRole`                                           |
+| `iam:ListAttachedUserPolicies`                          |
+| `iam:ListRoles`                                         |
+| `iam:ListUsers`                                         |
+| `inspector:ListAssessmentRuns`                          |
+| `kms:Decrypt`                                           |
+| `lambda:GetFunction`                                    |
+| `lambda:GetPolicy`                                      |
+| `lambda:InvokeFunction`                                 |
+| `lambda:ListFunctions`                                  |
+| `organizations:DescribeOrganization`                    |
+| `organizations:InviteAccountToOrganization`             |
+| `organizations:ListAccounts`                            |
+| `organizations:ListRoots`                               |
+| `rds:DescribeDBClusters`                                |
+| `rds:DescribeDBInstances`                               |
+| `rds:DescribeDBSnapshots`                               |
+| `redshift:DescribeClusters`                             |
+| `s3:ListAllMyBuckets`                                    |
+| `savingsplans:DescribeSavingsPlans`                      |
+| `support:DescribeCases`                                  |
+| `support:DescribeTrustedAdvisorCheckRefreshStatuses`     |
+| `support:DescribeTrustedAdvisorCheckResult`              |
+| `support:DescribeTrustedAdvisorChecks`                   |
+| `tag:GetResources`                                       |
+| `wellarchitected:ListLenses`                             |
+| `wellarchitected:ListWorkloads`                          |
+| `workspaces:DescribeWorkspaceDirectories`                |
+
 ## Usage
 
 ### Onboarding Payer account
