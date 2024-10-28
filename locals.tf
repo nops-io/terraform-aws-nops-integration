@@ -15,7 +15,7 @@ locals {
   new_project_data      = local.project_count == 0 ? jsondecode(data.http.create_nops_project[0].response_body) : null
   project_data          = coalesce(local.existing_project_data, local.new_project_data)
   external_id           = local.project_data != null ? local.project_data.external_id : null
-  system_bucket_name    = "nops-${local.client_id}-${local.project_data.id}-${local.account_id}"
+  system_bucket_name    = var.system_bucket_name != "na" ? var.system_bucket_name : "nops-${local.client_id}-${local.project_data.id}-${local.account_id}"
   create_bucket         = local.is_master_account
   notify_success        = local.project_data.arn == "arn:aws:iam::${local.account_id}:role/na"
 }

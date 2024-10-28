@@ -30,7 +30,7 @@ output "nops_integration_status" {
 
 output "system_bucket_name" {
   description = "The name of the S3 bucket (if created)"
-  value       = local.create_bucket ? local.system_bucket_name : "na"
+  value       = local.create_bucket ? local.system_bucket_name : null
 }
 
 output "project_status" {

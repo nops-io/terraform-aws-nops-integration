@@ -11,5 +11,5 @@ resource "time_sleep" "wait_for_resources" {
     aws_s3_bucket_server_side_encryption_configuration.nops_bucket_encryption
   ]
 
-  create_duration = "60s"
+  create_duration = "10s"
 }

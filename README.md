@@ -25,7 +25,7 @@ This Terraform module automates the process of integrating your AWS account with
 The following list contains the base IAM permissions required by the `nOps` platform to perform
 the base actions on customer accounts.
 
-| Base permissions required                              |
+| Base permissions requested                             |
 |--------------------------------------------------------|
 | `autoscaling:DescribeAutoScalingGroups`                |
 | `autoscaling:DescribeAutoScalingInstances`             |
@@ -75,39 +75,39 @@ the base actions on customer accounts.
 | `elasticloadbalancing:DescribeLoadBalancers`           |
 | `es:DescribeElasticsearchDomains`                      |
 | `es:ListDomainNames`                                   |
-| `events:CreateEventBus`                                 |
-| `events:ListRules`                                      |
-| `guardduty:ListDetectors`                               |
-| `iam:GetAccountPasswordPolicy`                          |
-| `iam:GetAccountSummary`                                 |
-| `iam:GetRole`                                           |
-| `iam:ListAttachedUserPolicies`                          |
-| `iam:ListRoles`                                         |
-| `iam:ListUsers`                                         |
-| `inspector:ListAssessmentRuns`                          |
-| `kms:Decrypt`                                           |
-| `lambda:GetFunction`                                    |
-| `lambda:GetPolicy`                                      |
-| `lambda:InvokeFunction`                                 |
-| `lambda:ListFunctions`                                  |
-| `organizations:DescribeOrganization`                    |
-| `organizations:InviteAccountToOrganization`             |
-| `organizations:ListAccounts`                            |
-| `organizations:ListRoots`                               |
-| `rds:DescribeDBClusters`                                |
-| `rds:DescribeDBInstances`                               |
-| `rds:DescribeDBSnapshots`                               |
-| `redshift:DescribeClusters`                             |
-| `s3:ListAllMyBuckets`                                    |
-| `savingsplans:DescribeSavingsPlans`                      |
-| `support:DescribeCases`                                  |
-| `support:DescribeTrustedAdvisorCheckRefreshStatuses`     |
-| `support:DescribeTrustedAdvisorCheckResult`              |
-| `support:DescribeTrustedAdvisorChecks`                   |
-| `tag:GetResources`                                       |
-| `wellarchitected:ListLenses`                             |
-| `wellarchitected:ListWorkloads`                          |
-| `workspaces:DescribeWorkspaceDirectories`                |
+| `events:CreateEventBus`                                |
+| `events:ListRules`                                     |
+| `guardduty:ListDetectors`                              |
+| `iam:GetAccountPasswordPolicy`                         |
+| `iam:GetAccountSummary`                                |
+| `iam:GetRole`                                          |
+| `iam:ListAttachedUserPolicies`                         |
+| `iam:ListRoles`                                        |
+| `iam:ListUsers`                                        |
+| `inspector:ListAssessmentRuns`                         |
+| `kms:Decrypt`                                          |
+| `lambda:GetFunction`                                   |
+| `lambda:GetPolicy`                                     |
+| `lambda:InvokeFunction`                                |
+| `lambda:ListFunctions`                                 |
+| `organizations:DescribeOrganization`                   |
+| `organizations:InviteAccountToOrganization`            |
+| `organizations:ListAccounts`                           |
+| `organizations:ListRoots`                              |
+| `rds:DescribeDBClusters`                               |
+| `rds:DescribeDBInstances`                              |
+| `rds:DescribeDBSnapshots`                              |
+| `redshift:DescribeClusters`                            |
+| `s3:ListAllMyBuckets`                                  |
+| `savingsplans:DescribeSavingsPlans`                    |
+| `support:DescribeCases`                                |
+| `support:DescribeTrustedAdvisorCheckRefreshStatuses`   |
+| `support:DescribeTrustedAdvisorCheckResult`            |
+| `support:DescribeTrustedAdvisorChecks`                 |
+| `tag:GetResources`                                     |
+| `wellarchitected:ListLenses`                           |
+| `wellarchitected:ListWorkloads`                        |
+| `workspaces:DescribeWorkspaceDirectories`              |
 
 ## Usage
 
@@ -272,6 +272,7 @@ No modules.
 | <a name="input_compute_copilot"></a> [compute\_copilot](#input\_compute\_copilot) | If true, the IAM policy required for nOps compute copilot will be created. | `bool` | `true` | no |
 | <a name="input_essentials"></a> [essentials](#input\_essentials) | If true, the IAM policy required for nOps essentials will be created. | `bool` | `true` | no |
 | <a name="input_reconfigure"></a> [reconfigure](#input\_reconfigure) | [DEPRECATED] If true, allows overriding existing project settings. If false, stops execution if project already exists. | `bool` | `false` | no |
+| <a name="input_system_bucket_name"></a> [system\_bucket\_name](#input\_system\_bucket\_name) | The name of the system bucket for nOps integration, this will be deprecated in the future. Keeping for backwards compatibility. | `string` | `"na"` | no |
 | <a name="input_wafr"></a> [wafr](#input\_wafr) | If true, the IAM policy required for nOps WAFR will be created. | `bool` | `true` | no |
 
 ## Outputs
