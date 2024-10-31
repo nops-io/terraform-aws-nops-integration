@@ -49,6 +49,7 @@ resource "aws_iam_role_policy" "nops_wafr_policy" {
           "ec2:DescribeFlowLogs",
           "ec2:DescribeSnapshots",
           "ec2:DescribeRouteTables",
+          "ec2:DescribeSecurityGroups",
           "wellarchitected:*",
           "workspaces:DescribeWorkspaceDirectories"
         ]
@@ -89,7 +90,6 @@ resource "aws_iam_role_policy" "nops_compute_copilot_policy" {
       {
         Effect = "Allow"
         Action = [
-          "autoscaling:DescribeAutoScalingGroups",
           "ec2:DescribeLaunchTemplateVersions",
           "ec2:DescribeLaunchConfigurations",
           "ec2:DescribeImages",
@@ -113,12 +113,16 @@ resource "aws_iam_role_policy" "nops_integration_policy" {
       {
         Effect = "Allow"
         Action = [
+          "autoscaling:DescribeAutoScalingGroups",
+          "autoscaling:DescribeAutoScalingInstances",
           "ce:ListCostAllocationTags",
           "ce:UpdateCostAllocationTagsStatus",
           "ce:GetCostAndUsage",
           "ce:GetReservationPurchaseRecommendation",
           "ce:GetSavingsPlansUtilizationDetails",
           "ce:GetSavingsPlansPurchaseRecommendation",
+          "ce:GetReservationUtilization",
+          "ce:StartSavingsPlansPurchaseRecommendationGeneration",
           "config:DescribeConfigurationRecorders",
           "cur:DescribeReportDefinitions",
           "cur:PutReportDefinition",
@@ -159,13 +163,14 @@ resource "aws_iam_role_policy" "nops_integration_policy" {
           "s3:ListAllMyBuckets",
           "s3:GetBucketVersioning",
           "savingsplans:DescribeSavingsPlans",
+          "support:DescribeCases",
           "support:DescribeTrustedAdvisorCheckRefreshStatuses",
           "support:DescribeTrustedAdvisorCheckResult",
           "support:DescribeTrustedAdvisorChecks",
           "tag:GetResources",
           "organizations:ListAccounts",
           "organizations:DescribeOrganization",
-          "organizations:ListRoots"
+          "organizations:ListRoots",
         ]
         Resource = "*"
       }
