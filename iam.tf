@@ -117,6 +117,8 @@ resource "aws_iam_role_policy" "nops_integration_policy" {
           "ce:UpdateCostAllocationTagsStatus",
           "ce:GetCostAndUsage",
           "ce:GetReservationPurchaseRecommendation",
+          "ce:GetSavingsPlansUtilizationDetails",
+          "ce:GetSavingsPlansPurchaseRecommendation",
           "config:DescribeConfigurationRecorders",
           "cur:DescribeReportDefinitions",
           "cur:PutReportDefinition",
