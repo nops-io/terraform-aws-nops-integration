@@ -51,4 +51,7 @@ resource "aws_s3_bucket_policy" "nops_bucket_policy" {
       }
     ]
   })
+  lifecycle {
+    ignore_changes = all
+  }
 }
