@@ -17,5 +17,9 @@ terraform {
       source  = "hashicorp/null"
       version = "3.2.3"
     }
+    nops = {
+      source  = "werner-nops/nops-internal"
+      version = "0.0.1"
+    }
   }
 }

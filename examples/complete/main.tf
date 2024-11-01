@@ -2,6 +2,8 @@ locals {
   region = "us-east-1"
 }
 
+provider "nops" {}
+
 provider "aws" {
   alias  = "root"
   region = local.region
@@ -15,8 +17,7 @@ module "onboarding_payer_account" {
   providers = {
     aws = aws.root
   }
-  source  = "../../"
-  api_key = "xxxxx-xxx"
+  source = "../../"
 }
 
 provider "aws" {
@@ -32,8 +33,7 @@ module "onboarding_child_account" {
   providers = {
     aws = aws.child_1
   }
-  source  = "../../"
-  api_key = "xxxxx-xxx"
+  source = "../../"
 }
 
 provider "aws" {
@@ -49,6 +49,5 @@ module "onboarding_child_account_2" {
   providers = {
     aws = aws.child_2
   }
-  source  = "../../"
-  api_key = "xxxxx-xxx"
+  source = "../../"
 }
