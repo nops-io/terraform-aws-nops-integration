@@ -183,6 +183,7 @@ resource "aws_iam_role_policy" "nops_integration_policy" {
           "ce:ListSavingsPlansPurchaseRecommendationGeneration",
           "ce:ListTagsForResource",
           "ce:StartSavingsPlansPurchaseRecommendationGeneration",
+          "ce:UpdateCostAllocationTagsStatus",
           "compute-optimizer:DescribeRecommendationExportJobs",
           "compute-optimizer:GetAutoScalingGroupRecommendations",
           "compute-optimizer:GetEBSVolumeRecommendations",
