@@ -4,22 +4,10 @@ variable "api_key" {
   sensitive   = true
 }
 
-variable "essentials" {
+variable "min_required_permissions" {
   type        = bool
-  default     = true
-  description = "If true, the IAM policy required for nOps essentials will be created."
-}
-
-variable "compute_copilot" {
-  type        = bool
-  default     = true
-  description = "If true, the IAM policy required for nOps compute copilot will be created."
-}
-
-variable "wafr" {
-  type        = bool
-  default     = true
-  description = "If true, the IAM policy required for nOps WAFR will be created."
+  default     = false
+  description = "If true, IAM policies with the min base permissions for nOps to get cost and usage data will be created. Some platform features will not be available."
 }
 
 variable "system_bucket_name" {
