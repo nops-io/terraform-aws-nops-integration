@@ -310,7 +310,8 @@ resource "aws_iam_role_policy" "nops_integration_policy" {
           "support:DescribeTrustedAdvisorCheckResult",
           "support:DescribeTrustedAdvisorChecks",
           "wellarchitected:*",
-          "ce:*"
+          "ce:*",
+          "events:CreateEventBus"
         ]
         Resource = "*"
       },
