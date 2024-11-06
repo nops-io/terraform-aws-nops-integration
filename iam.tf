@@ -22,6 +22,10 @@ resource "aws_iam_role" "nops_integration_role" {
   tags = {
     version = "1.1.0"
   }
+
+  depends_on = [
+    nops_project.project
+  ]
 }
 
 resource "aws_iam_role_policy" "nops_wafr_policy" {

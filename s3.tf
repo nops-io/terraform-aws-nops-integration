@@ -6,6 +6,10 @@ resource "aws_s3_bucket" "nops_system_bucket" {
   lifecycle {
     ignore_changes = all
   }
+
+  depends_on = [
+    nops_project.project
+  ]
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "nops_bucket_encryption" {
