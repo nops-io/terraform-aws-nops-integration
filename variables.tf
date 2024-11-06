@@ -3,6 +3,7 @@ variable "api_key" {
   type        = string
   description = "[DEPRECATED] The nOps API key, can be supplied as an env var NOPS_API_KEY or in the provider call in your configuration."
   sensitive   = true
+  default     = ""
 }
 
 variable "min_required_permissions" {
