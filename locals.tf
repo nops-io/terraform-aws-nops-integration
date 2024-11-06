@@ -1,21 +1,11 @@
 locals {
-  nops_principal    = "202279780353"
-  nops_url          = "https://app.nops.io/"
-  account_id        = data.aws_caller_identity.current.account_id
-  master_account_id = data.aws_organizations_organization.current.master_account_id
-  is_master_account = local.account_id == local.master_account_id
-  client_id         = try(jsondecode(data.http.check_current_client.response_body).id, "error")
-  project_aws_list  = try(jsondecode(data.http.check_project_aws.response_body), "error")
-  matching_projects = [
-    for project in local.project_aws_list : project
-    if project.account_number == local.account_id
-  ]
-  project_count         = length(local.matching_projects)
-  existing_project_data = local.project_count == 1 ? local.matching_projects[0] : null
-  new_project_data      = local.project_count == 0 ? jsondecode(data.http.create_nops_project[0].response_body) : null
-  project_data          = coalesce(local.existing_project_data, local.new_project_data)
-  external_id           = local.project_data != null ? local.project_data.external_id : null
-  system_bucket_name    = var.system_bucket_name != "na" ? var.system_bucket_name : "nops-${local.client_id}-${local.project_data.id}-${local.account_id}"
-  create_bucket         = local.is_master_account
-  notify_success        = local.project_data.arn == "arn:aws:iam::${local.account_id}:role/na"
+  nops_principal     = "202279780353"
+  account_id         = data.aws_caller_identity.current.account_id
+  master_account_id  = data.aws_organizations_organization.current.master_account_id
+  is_master_account  = local.account_id == local.master_account_id
+  client_id          = nops_project.project.id
+  project_id         = nops_project.project.client
+  external_id        = nops_project.project.external_id
+  system_bucket_name = var.system_bucket_name != "na" ? var.system_bucket_name : "nops-${local.client_id}-${local.project_id}-${local.account_id}"
+  create_bucket      = local.is_master_account
 }

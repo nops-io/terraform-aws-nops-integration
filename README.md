@@ -227,6 +227,7 @@ module tf_onboarding {
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.0 |
 | <a name="requirement_http"></a> [http](#requirement\_http) | ~> 3.0 |
+| <a name="requirement_nops"></a> [nops](#requirement\_nops) | 0.0.3 |
 | <a name="requirement_null"></a> [null](#requirement\_null) | 3.2.3 |
 | <a name="requirement_time"></a> [time](#requirement\_time) | ~> 0.7 |
 
@@ -235,7 +236,7 @@ module tf_onboarding {
 | Name | Version |
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.0 |
-| <a name="provider_http"></a> [http](#provider\_http) | ~> 3.0 |
+| <a name="provider_nops"></a> [nops](#provider\_nops) | 0.0.3 |
 | <a name="provider_time"></a> [time](#provider\_time) | ~> 0.7 |
 
 ## Modules
@@ -258,20 +259,19 @@ No modules.
 | [aws_s3_bucket_policy.nops_bucket_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_policy) | resource |
 | [aws_s3_bucket_public_access_block.nops_bucket_block_public_access](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_public_access_block) | resource |
 | [aws_s3_bucket_server_side_encryption_configuration.nops_bucket_encryption](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_server_side_encryption_configuration) | resource |
+| [nops_integration.integration](https://registry.terraform.io/providers/nops-io/nops/0.0.3/docs/resources/integration) | resource |
+| [nops_project.project](https://registry.terraform.io/providers/nops-io/nops/0.0.3/docs/resources/project) | resource |
 | [time_sleep.wait_for_resources](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
 | [aws_iam_policy.iam_readonly_access](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy) | data source |
 | [aws_organizations_organization.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/organizations_organization) | data source |
-| [http_http.check_current_client](https://registry.terraform.io/providers/hashicorp/http/latest/docs/data-sources/http) | data source |
-| [http_http.check_project_aws](https://registry.terraform.io/providers/hashicorp/http/latest/docs/data-sources/http) | data source |
-| [http_http.create_nops_project](https://registry.terraform.io/providers/hashicorp/http/latest/docs/data-sources/http) | data source |
-| [http_http.notify_nops_integration_complete](https://registry.terraform.io/providers/hashicorp/http/latest/docs/data-sources/http) | data source |
+| [nops_projects.current](https://registry.terraform.io/providers/nops-io/nops/0.0.3/docs/data-sources/projects) | data source |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_api_key"></a> [api\_key](#input\_api\_key) | The nOps API key | `string` | n/a | yes |
+| <a name="input_api_key"></a> [api\_key](#input\_api\_key) | [DEPRECATED] The nOps API key, can be supplied as an env var NOPS\_API\_KEY or in the provider call in your configuration. | `string` | n/a | yes |
 | <a name="input_min_required_permissions"></a> [min\_required\_permissions](#input\_min\_required\_permissions) | If true, IAM policies with the min base permissions for nOps to get cost and usage data will be created. Some platform features will not be available. | `bool` | `false` | no |
 | <a name="input_reconfigure"></a> [reconfigure](#input\_reconfigure) | [DEPRECATED] If true, allows overriding existing project settings. If false, stops execution if project already exists. | `bool` | `false` | no |
 | <a name="input_system_bucket_name"></a> [system\_bucket\_name](#input\_system\_bucket\_name) | The name of the system bucket for nOps integration, this will be deprecated in the future. Keeping for backwards compatibility. | `string` | `"na"` | no |
@@ -282,12 +282,8 @@ No modules.
 |------|-------------|
 | <a name="output_current_client_id"></a> [current\_client\_id](#output\_current\_client\_id) | The client ID of the current account in nOps |
 | <a name="output_is_master_account"></a> [is\_master\_account](#output\_is\_master\_account) | Whether the current account is the master account |
-| <a name="output_is_master_account_out"></a> [is\_master\_account\_out](#output\_is\_master\_account\_out) | Indicates if the account is the master account |
 | <a name="output_master_account_id"></a> [master\_account\_id](#output\_master\_account\_id) | The account ID of the AWS Organization's master account |
-| <a name="output_nops_integration_status"></a> [nops\_integration\_status](#output\_nops\_integration\_status) | Indicates if the nOps integration notification was sent |
-| <a name="output_notify_nops_integration_complete_status"></a> [notify\_nops\_integration\_complete\_status](#output\_notify\_nops\_integration\_complete\_status) | Status of the nOps integration notification |
 | <a name="output_project_aws_list"></a> [project\_aws\_list](#output\_project\_aws\_list) | List of projects in nOps |
-| <a name="output_project_status"></a> [project\_status](#output\_project\_status) | Status of the nOps project for this account |
 | <a name="output_role_arn"></a> [role\_arn](#output\_role\_arn) | The ARN of the IAM role |
 | <a name="output_system_bucket_name"></a> [system\_bucket\_name](#output\_system\_bucket\_name) | The name of the S3 bucket (if created) |
 <!-- END_TF_DOCS -->
