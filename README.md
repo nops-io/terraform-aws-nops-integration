@@ -227,7 +227,7 @@ module tf_onboarding {
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.0 |
 | <a name="requirement_http"></a> [http](#requirement\_http) | ~> 3.0 |
-| <a name="requirement_nops"></a> [nops](#requirement\_nops) | 0.0.1 |
+| <a name="requirement_nops"></a> [nops](#requirement\_nops) | 0.0.3 |
 | <a name="requirement_null"></a> [null](#requirement\_null) | 3.2.3 |
 | <a name="requirement_time"></a> [time](#requirement\_time) | ~> 0.7 |
 
@@ -236,7 +236,7 @@ module tf_onboarding {
 | Name | Version |
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.0 |
-| <a name="provider_nops"></a> [nops](#provider\_nops) | 0.0.1 |
+| <a name="provider_nops"></a> [nops](#provider\_nops) | 0.0.3 |
 | <a name="provider_time"></a> [time](#provider\_time) | ~> 0.7 |
 
 ## Modules
@@ -259,8 +259,8 @@ No modules.
 | [aws_s3_bucket_policy.nops_bucket_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_policy) | resource |
 | [aws_s3_bucket_public_access_block.nops_bucket_block_public_access](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_public_access_block) | resource |
 | [aws_s3_bucket_server_side_encryption_configuration.nops_bucket_encryption](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_server_side_encryption_configuration) | resource |
-| [nops_notification.notification](https://registry.terraform.io/providers/werner-nops/nops-internal/0.0.1/docs/resources/notification) | resource |
-| [nops_project.project](https://registry.terraform.io/providers/werner-nops/nops-internal/0.0.1/docs/resources/project) | resource |
+| [nops_integration.integration](https://registry.terraform.io/providers/nops-io/nops/0.0.3/docs/resources/integration) | resource |
+| [nops_project.project](https://registry.terraform.io/providers/nops-io/nops/0.0.3/docs/resources/project) | resource |
 | [time_sleep.wait_for_resources](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
 | [aws_iam_policy.iam_readonly_access](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy) | data source |
