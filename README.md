@@ -86,6 +86,21 @@ terraform apply plan
 
 Onboarding child accounts is performed using the same module, it already contains the logic to react when its being applied on any account that is not root
 ```hcl
+terraform {
+  required_providers {
+    nops = {
+      source = "nops-io/nops"
+    }
+  }
+}
+
+provider "nops" {
+  # nOps API key that will be used to authenticate with the nOps platform to onboard the account.
+  # It's recommended to not commit this value into VCS, to securely provide this value use a tfvars that isn't commited into any repository.
+  # This value can also be provided as an environment variable NOPS_API_KEY
+  nops_api_key            = "XXXXXXX"
+}
+
 provider "aws" {
   alias  = "child"
   region = "us-east-1"
@@ -100,10 +115,6 @@ module tf_onboarding {
   }
 
   source             = "nops-io/nops-integration/aws"
-  # nOps API key that will be used to authenticate with the nOps platform to onboard the account.
-  api_key            = "nops_api_key"
-  # Flag required to update the nOps project.
-  reconfigure        = "true"
 }
 ```
 ## Importing existing nOps projects ##
