@@ -102,6 +102,8 @@ module tf_onboarding {
   source             = "nops-io/nops-integration/aws"
   # nOps API key that will be used to authenticate with the nOps platform to onboard the account.
   api_key            = "nops_api_key"
+  # Flag required to update the nOps project.
+  reconfigure        = "true"
 }
 ```
 ## Importing existing nOps projects ##
