@@ -22,92 +22,8 @@ This Terraform module automates the process of integrating your AWS account with
 - nOps API key
 
 ## Minimum required IAM permissions
-The following list contains the base IAM permissions required by the `nOps` platform to perform
-the base actions on customer accounts.
-
-| Base permissions requested                             |
-|--------------------------------------------------------|
-| `autoscaling:DescribeAutoScalingGroups`                |
-| `autoscaling:DescribeAutoScalingInstances`             |
-| `autoscaling:DescribeLaunchConfigurations `            |
-| `ce:GetCostAndUsage`                                   |
-| `ce:GetReservationPurchaseRecommendation`              |
-| `ce:GetReservationUtilization`                         |
-| `ce:GetSavingsPlansUtilizationDetails`                 |
-| `ce:ListCostAllocationTags`                            |
-| `ce:StartSavingsPlansPurchaseRecommendationGeneration` |
-| `ce:UpdateCostAllocationTagsStatus`                    |
-| `ce:GetSavingsPlansPurchaseRecommendation`             |
-| `cloudformation:DescribeStacks`                        |
-| `cloudformation:ListStacks`                            |
-| `cloudtrail:DescribeTrails`                            |
-| `cloudtrail:LookupEvents`                              |
-| `cloudwatch:GetMetricStatistics`                       |
-| `cloudwatch:ListMetrics`                               |
-| `config:DescribeConfigurationRecorders`                |
-| `cur:DescribeReportDefinitions`                        |
-| `cur:PutReportDefinition`                              |
-| `dynamodb:DescribeTable`                               |
-| `dynamodb:ListTables`                                  |
-| `ec2:DescribeAvailabilityZones`                        |
-| `ec2:DescribeFlowLogs`                                 |
-| `ec2:DescribeImages`                                   |
-| `ec2:DescribeInstances`                                |
-| `ec2:DescribeInstanceStatus`                           |
-| `ec2:DescribeLaunchConfigurations`                     |
-| `ec2:DescribeLaunchTemplateVersions`                   |
-| `ec2:DescribeNatGateways`                              |
-| `ec2:DescribeNetworkInterfaces`                        |
-| `ec2:DescribeRegions`                                  |
-| `ec2:DescribeReservedInstances`                        |
-| `ec2:DescribeRouteTables`                              |
-| `ec2:DescribeSecurityGroups`                           |
-| `ec2:DescribeSnapshots`                                |
-| `ec2:DescribeVolumes`                                  |
-| `ec2:DescribeVpcs`                                     |
-| `ecs:ListClusters`                                     |
-| `eks:DescribeCluster`                                  |
-| `eks:DescribeNodegroup`                                |
-| `eks:ListClusters`                                     |
-| `elasticache:DescribeCacheClusters`                    |
-| `elasticache:DescribeCacheSubnetGroups`                |
-| `elasticfilesystem:DescribeFileSystems`                |
-| `elasticloadbalancing:DescribeLoadBalancers`           |
-| `es:DescribeElasticsearchDomains`                      |
-| `es:ListDomainNames`                                   |
-| `events:CreateEventBus`                                |
-| `events:ListRules`                                     |
-| `guardduty:ListDetectors`                              |
-| `iam:GetAccountPasswordPolicy`                         |
-| `iam:GetAccountSummary`                                |
-| `iam:GetRole`                                          |
-| `iam:ListAttachedUserPolicies`                         |
-| `iam:ListRoles`                                        |
-| `iam:ListUsers`                                        |
-| `inspector:ListAssessmentRuns`                         |
-| `kms:Decrypt`                                          |
-| `lambda:GetFunction`                                   |
-| `lambda:GetPolicy`                                     |
-| `lambda:InvokeFunction`                                |
-| `lambda:ListFunctions`                                 |
-| `organizations:DescribeOrganization`                   |
-| `organizations:InviteAccountToOrganization`            |
-| `organizations:ListAccounts`                           |
-| `organizations:ListRoots`                              |
-| `rds:DescribeDBClusters`                               |
-| `rds:DescribeDBInstances`                              |
-| `rds:DescribeDBSnapshots`                              |
-| `redshift:DescribeClusters`                            |
-| `s3:ListAllMyBuckets`                                  |
-| `savingsplans:DescribeSavingsPlans`                    |
-| `support:DescribeCases`                                |
-| `support:DescribeTrustedAdvisorCheckRefreshStatuses`   |
-| `support:DescribeTrustedAdvisorCheckResult`            |
-| `support:DescribeTrustedAdvisorChecks`                 |
-| `tag:GetResources`                                     |
-| `wellarchitected:ListLenses`                           |
-| `wellarchitected:ListWorkloads`                        |
-| `workspaces:DescribeWorkspaceDirectories`              |
+Customers can opt to reduce the scope for the `nOps` IAM role. In order to do this, the variable `min_required_permissions` should be set to true.
+However, in this restricted mode the `nOps` platform might not show the complete metadata for AWS resources.
 
 ## Usage
 
@@ -118,6 +34,21 @@ The below example shows how to add the management (root) AWS account integration
 
 1. Being authenticated on the Payer account of the AWS organization, add the following code:
 ```hcl
+terraform {
+  required_providers {
+    nops = {
+      source = "nops-io/nops"
+    }
+  }
+}
+
+provider "nops" {
+  # nOps API key that will be used to authenticate with the nOps platform to onboard the account.
+  # It's recommended to not commit this value into VCS, to securely provide this value use a tfvars that isn't commited into any repository.
+  # This value can also be provided as an environment variable NOPS_API_KEY
+  nops_api_key            = "XXXXXXX"
+}
+
 provider "aws" {
   alias  = "root"
   region = "us-east-1"
@@ -150,51 +81,6 @@ terraform plan -out=plan
 terraform apply plan
 ```
 
-If you want to reconfigure an existing nOps account:
-
-```
-terraform apply plan -var="reconfigure=true"
-```
-
-or
-
-```hcl
-module tf_onboarding {
-  providers = {
-    aws = aws.root
-  }
-
-  source             = "nops-io/nops-integration/aws"
-  system_bucket_name = "example"
-  api_key            = "nops_api_key"
-  reconfigure        = true
-}
-```
-
-4. Troubleshooting
-
-If you want to reinstall the stack you might get an error
-
-```
-│ Error: creating IAM Role (NopsIntegrationRole-xxxxx): EntityAlreadyExists: Role with name NopsIntegrationRole-xxxxx already exists.
-```
-
-You can import the role to terraform state by running the following command
-```
-terraform import module.tf_onboarding.aws_iam_role.nops_integration_role NopsIntegrationRole-xxxxx
-```
-
-If the above yields the following error
-```
-│ Error: Resource already managed by Terraform
-│
-│ Terraform is already managing a remote object for aws_iam_role.nops_integration_role. To import to this address you must first remove the existing object from the state.
-```
-
-Then execute the following command to remove the failed resource from the state, and then import
-```
-terraform state rm module.tf_onboarding.aws_iam_role.nops_integration_role
-```
 
 ### Onboarding child account
 
@@ -218,6 +104,79 @@ module tf_onboarding {
   api_key            = "nops_api_key"
 }
 ```
+## Importing existing nOps projects ##
+
+The **nOps** Terraform provider supports importing existing projects into the state as to allow already onboarded customers to manage their projects with IaC. In order to import a project follow the
+next steps:
+
+- First, grab the project ID from **nOps**. You can get it from the AWS accounts [dashboard](https://app.nops.io/v3/settings?tab=AWS%20Accounts), each account has an ID below its name.
+- Then in your Terraform configuration run the following commands:
+```
+terraform import module.tf_onboarding.nops_project.project XXXXX
+```
+You should see the following output
+```
+module.tf_onboarding.nops_project.project: Importing from ID "XXXX"...
+module.tf_onboarding.nops_project.project: Import prepared!
+  Prepared nops_project for import
+module.tf_onboarding.nops_project.project: Refreshing state...
+
+Import successful!
+
+The resources that were imported are shown above. These resources are now in
+your Terraform state and will henceforth be managed by Terraform.
+
+```
+- After the above, we need to import the integration with the AWS account, for this run the following replacing your AWS acconunt ID.
+```
+terraform import module.tf_onboarding.nops_integration.integration XXXXXX
+```
+You should see the following output, with the AWS account ID being imported into the state.
+```
+module.tf_onboarding.nops_integration.integration: Importing from ID "XXXXXX"...
+module.tf_onboarding.nops_integration.integration: Import prepared!
+  Prepared nops_integration for import
+module.tf_onboarding.nops_integration.integration: Refreshing state...
+
+Import successful!
+
+The resources that were imported are shown above. These resources are now in
+your Terraform state and will henceforth be managed by Terraform.
+```
+
+
+## Minimum nOps required IAM policies ##
+
+A variable named `min_required_permissions` has been declared in the **nOps** terraform module that enabled customers choosing a more restricted setup to be able to use the platform.
+In order to enter this restricted mode, set the variable to `true`. Take into consideration that **nOps** will not be able to get the full metadata for AWS resources with this setup.
+To review these permissions, refer to the [policies](../IAM/iam-minimum-platform-permissions.mdx) page or the [Terraform module](https://registry.terraform.io/modules/nops-io/nops-integration/aws/latest) for the most recent updates.
+
+## Troubleshooting ##
+
+If you see an error like the following
+```
+Error: Error getting remote project data
+
+  with module.tf_onboarding.data.nops_projects.current,
+  on .terraform/modules/tf_onboarding/data.tf line 9, in data "nops_projects" "current":
+  9: data "nops_projects" "current" {}
+
+```
+Check that the API key value being provided is valid and exists in your account. Your current API keys are listed [here](https://app.nops.io/v3/settings?tab=API%20Key).
+
+**nOps** supports onboarding unique AWS accounts per Client, onboarding the same AWS account multiple times for one Client isn't allowed. So if you see an error like the following
+```
+Error: Error: a project already exists for this AWS account "XXXXXX" with ID YYYY, please review or import.
+
+  with module.tf_onboarding_should_fail.nops_project.project,
+  on .terraform/modules/tf_onboarding_should_fail/main.tf line 1, in resource "nops_project" "project":
+   1: resource "nops_project" "project" {}
+
+Project found for AWS account "XXXX"
+```
+Then check that the credentials being used to deployed are correct. If they are, we support importing projects into the Terraform state. Please refer to the [import section.](#importing-existing-nops-projects)
+
+
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
