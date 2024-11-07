@@ -4,6 +4,8 @@
 
 This Terraform module automates the process of integrating your AWS account with nOps, a cloud management and optimization platform. It streamlines the setup of necessary AWS resources and permissions, enhancing the onboarding experience for nOps users.
 
+![](./assets/Terraform.png)
+
 ## Features
 
 - Automatic detection of existing nOps projects for the AWS account
@@ -19,6 +21,10 @@ This Terraform module automates the process of integrating your AWS account with
 - AWS CLI configured with appropriate permissions
 - nOps API key
 
+## Minimum required IAM permissions
+Customers can opt to reduce the scope for the `nOps` IAM role. In order to do this, the variable `min_required_permissions` should be set to true.
+However, in this restricted mode the `nOps` platform might not show the complete metadata for AWS resources.
+
 ## Usage
 
 ### Onboarding Payer account
@@ -28,6 +34,21 @@ The below example shows how to add the management (root) AWS account integration
 
 1. Being authenticated on the Payer account of the AWS organization, add the following code:
 ```hcl
+terraform {
+  required_providers {
+    nops = {
+      source = "nops-io/nops"
+    }
+  }
+}
+
+provider "nops" {
+  # nOps API key that will be used to authenticate with the nOps platform to onboard the account.
+  # It's recommended to not commit this value into VCS, to securely provide this value use a tfvars that isn't commited into any repository.
+  # This value can also be provided as an environment variable NOPS_API_KEY
+  nops_api_key            = "XXXXXXX"
+}
+
 provider "aws" {
   alias  = "root"
   region = "us-east-1"
@@ -40,10 +61,7 @@ module tf_onboarding {
   providers = {
     aws = aws.root
   }
-
   source             = "nops-io/nops-integration/aws"
-  # This bucket will be created by the module with the name provided here, make sure its globally unique.
-  system_bucket_name = "example"
   # nOps API key that will be used to authenticate with the nOps platform to onboard the account.
   api_key            = "nops_api_key"
 }
@@ -58,42 +76,12 @@ terraform init
 3. Plan and apply the Terraform configuration:
 
 ```
-terraform apply
+terraform plan -out=plan
+
+terraform apply plan
 ```
 
-If you want to reconfigure an existing nOps account:
 
-```
-terraform apply -var="reconfigure=true"
-```
-
-or
-
-```hcl
-module tf_onboarding {
-  providers = {
-    aws = aws.root
-  }
-
-  source             = "nops-io/nops-integration/aws"
-  system_bucket_name = "example"
-  api_key            = "nops_api_key"
-  reconfigure        = true
-}
-```
-
-4. Troubleshooting
-
-If you want to reinstall the stack you might got problem like
-
-```
-│ Error: creating IAM Role (NopsIntegrationRole-xxxxx): EntityAlreadyExists: Role with name NopsIntegrationRole-xxxxx already exists.
-```
-
-You can import the role to terraform state by running the following command
-```
-terraform import aws_iam_role.nops_integration_role NopsIntegrationRole-xxxxx
-```
 ### Onboarding child account
 
 Onboarding child accounts is performed using the same module, it already contains the logic to react when its being applied on any account that is not root
@@ -112,12 +100,83 @@ module tf_onboarding {
   }
 
   source             = "nops-io/nops-integration/aws"
-  # This bucket will be created by the module with the name provided here, make sure its globally unique.
-  system_bucket_name = "example"
   # nOps API key that will be used to authenticate with the nOps platform to onboard the account.
   api_key            = "nops_api_key"
 }
 ```
+## Importing existing nOps projects ##
+
+The **nOps** Terraform provider supports importing existing projects into the state as to allow already onboarded customers to manage their projects with IaC. In order to import a project follow the
+next steps:
+
+- First, grab the project ID from **nOps**. You can get it from the AWS accounts [dashboard](https://app.nops.io/v3/settings?tab=AWS%20Accounts), each account has an ID below its name.
+- Then in your Terraform configuration run the following commands:
+```
+terraform import module.tf_onboarding.nops_project.project XXXXX
+```
+You should see the following output
+```
+module.tf_onboarding.nops_project.project: Importing from ID "XXXX"...
+module.tf_onboarding.nops_project.project: Import prepared!
+  Prepared nops_project for import
+module.tf_onboarding.nops_project.project: Refreshing state...
+
+Import successful!
+
+The resources that were imported are shown above. These resources are now in
+your Terraform state and will henceforth be managed by Terraform.
+
+```
+- After the above, we need to import the integration with the AWS account, for this run the following replacing your AWS acconunt ID.
+```
+terraform import module.tf_onboarding.nops_integration.integration XXXXXX
+```
+You should see the following output, with the AWS account ID being imported into the state.
+```
+module.tf_onboarding.nops_integration.integration: Importing from ID "XXXXXX"...
+module.tf_onboarding.nops_integration.integration: Import prepared!
+  Prepared nops_integration for import
+module.tf_onboarding.nops_integration.integration: Refreshing state...
+
+Import successful!
+
+The resources that were imported are shown above. These resources are now in
+your Terraform state and will henceforth be managed by Terraform.
+```
+
+
+## Minimum nOps required IAM policies ##
+
+A variable named `min_required_permissions` has been declared in the **nOps** terraform module that enabled customers choosing a more restricted setup to be able to use the platform.
+In order to enter this restricted mode, set the variable to `true`. Take into consideration that **nOps** will not be able to get the full metadata for AWS resources with this setup.
+To review these permissions, refer to the [policies](../IAM/iam-minimum-platform-permissions.mdx) page or the [Terraform module](https://registry.terraform.io/modules/nops-io/nops-integration/aws/latest) for the most recent updates.
+
+## Troubleshooting ##
+
+If you see an error like the following
+```
+Error: Error getting remote project data
+
+  with module.tf_onboarding.data.nops_projects.current,
+  on .terraform/modules/tf_onboarding/data.tf line 9, in data "nops_projects" "current":
+  9: data "nops_projects" "current" {}
+
+```
+Check that the API key value being provided is valid and exists in your account. Your current API keys are listed [here](https://app.nops.io/v3/settings?tab=API%20Key).
+
+**nOps** supports onboarding unique AWS accounts per Client, onboarding the same AWS account multiple times for one Client isn't allowed. So if you see an error like the following
+```
+Error: Error: a project already exists for this AWS account "XXXXXX" with ID YYYY, please review or import.
+
+  with module.tf_onboarding_should_fail.nops_project.project,
+  on .terraform/modules/tf_onboarding_should_fail/main.tf line 1, in resource "nops_project" "project":
+   1: resource "nops_project" "project" {}
+
+Project found for AWS account "XXXX"
+```
+Then check that the credentials being used to deployed are correct. If they are, we support importing projects into the Terraform state. Please refer to the [import section.](#importing-existing-nops-projects)
+
+
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
@@ -125,8 +184,9 @@ module tf_onboarding {
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 4.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.0 |
 | <a name="requirement_http"></a> [http](#requirement\_http) | ~> 3.0 |
+| <a name="requirement_nops"></a> [nops](#requirement\_nops) | ~>0.0.4 |
 | <a name="requirement_null"></a> [null](#requirement\_null) | 3.2.3 |
 | <a name="requirement_time"></a> [time](#requirement\_time) | ~> 0.7 |
 
@@ -134,9 +194,8 @@ module tf_onboarding {
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | ~> 4.0 |
-| <a name="provider_http"></a> [http](#provider\_http) | ~> 3.0 |
-| <a name="provider_null"></a> [null](#provider\_null) | 3.2.3 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.0 |
+| <a name="provider_nops"></a> [nops](#provider\_nops) | ~>0.0.4 |
 | <a name="provider_time"></a> [time](#provider\_time) | ~> 0.7 |
 
 ## Modules
@@ -148,33 +207,33 @@ No modules.
 | Name | Type |
 |------|------|
 | [aws_iam_role.nops_integration_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
-| [aws_iam_role_policy.nops_eventbridge_integration_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
+| [aws_iam_role_policy.nops_compute_copilot_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
+| [aws_iam_role_policy.nops_essentials_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
+| [aws_iam_role_policy.nops_integration_minimum_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
 | [aws_iam_role_policy.nops_integration_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
 | [aws_iam_role_policy.nops_system_bucket_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
+| [aws_iam_role_policy.nops_wafr_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
+| [aws_iam_role_policy_attachment.nops_integration_readonly_policy_attachment](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
 | [aws_s3_bucket.nops_system_bucket](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket) | resource |
+| [aws_s3_bucket_policy.nops_bucket_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_policy) | resource |
+| [aws_s3_bucket_public_access_block.nops_bucket_block_public_access](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_public_access_block) | resource |
 | [aws_s3_bucket_server_side_encryption_configuration.nops_bucket_encryption](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_server_side_encryption_configuration) | resource |
-| [null_resource.check_api_errors](https://registry.terraform.io/providers/hashicorp/null/3.2.3/docs/resources/resource) | resource |
-| [null_resource.check_existing_project](https://registry.terraform.io/providers/hashicorp/null/3.2.3/docs/resources/resource) | resource |
-| [null_resource.force_new_role](https://registry.terraform.io/providers/hashicorp/null/3.2.3/docs/resources/resource) | resource |
-| [null_resource.project_check](https://registry.terraform.io/providers/hashicorp/null/3.2.3/docs/resources/resource) | resource |
-| [null_resource.reconfigure_trigger](https://registry.terraform.io/providers/hashicorp/null/3.2.3/docs/resources/resource) | resource |
-| [time_sleep.wait_for_iam_role](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
+| [nops_integration.integration](https://registry.terraform.io/providers/nops-io/nops/latest/docs/resources/integration) | resource |
+| [nops_project.project](https://registry.terraform.io/providers/nops-io/nops/latest/docs/resources/project) | resource |
+| [time_sleep.wait_for_resources](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
+| [aws_iam_policy.iam_readonly_access](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy) | data source |
 | [aws_organizations_organization.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/organizations_organization) | data source |
-| [http_http.check_current_client](https://registry.terraform.io/providers/hashicorp/http/latest/docs/data-sources/http) | data source |
-| [http_http.check_project_aws](https://registry.terraform.io/providers/hashicorp/http/latest/docs/data-sources/http) | data source |
-| [http_http.create_nops_project](https://registry.terraform.io/providers/hashicorp/http/latest/docs/data-sources/http) | data source |
-| [http_http.notify_nops_integration_complete](https://registry.terraform.io/providers/hashicorp/http/latest/docs/data-sources/http) | data source |
+| [nops_projects.current](https://registry.terraform.io/providers/nops-io/nops/latest/docs/data-sources/projects) | data source |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_api_key"></a> [api\_key](#input\_api\_key) | The nOps API key | `string` | n/a | yes |
-| <a name="input_nops_principal"></a> [nops\_principal](#input\_nops\_principal) | The nOps principal account number | `string` | `"202279780353"` | no |
-| <a name="input_nops_url"></a> [nops\_url](#input\_nops\_url) | The nOps base URL | `string` | `"https://app.nops.io/"` | no |
-| <a name="input_reconfigure"></a> [reconfigure](#input\_reconfigure) | If true, allows overriding existing project settings. If false, stops execution if project already exists. | `bool` | `false` | no |
-| <a name="input_system_bucket_name"></a> [system\_bucket\_name](#input\_system\_bucket\_name) | The name of the system bucket for nOps integration | `string` | n/a | yes |
+| <a name="input_api_key"></a> [api\_key](#input\_api\_key) | [DEPRECATED] The nOps API key, can be supplied as an env var NOPS\_API\_KEY or in the provider call in your configuration. | `string` | `""` | no |
+| <a name="input_min_required_permissions"></a> [min\_required\_permissions](#input\_min\_required\_permissions) | If true, IAM policies with the min base permissions for nOps to get cost and usage data will be created. Some platform features will not be available. | `bool` | `false` | no |
+| <a name="input_reconfigure"></a> [reconfigure](#input\_reconfigure) | [DEPRECATED] If true, allows overriding existing project settings. If false, stops execution if project already exists. | `bool` | `false` | no |
+| <a name="input_system_bucket_name"></a> [system\_bucket\_name](#input\_system\_bucket\_name) | The name of the system bucket for nOps integration, this will be deprecated in the future. Keeping for backwards compatibility. | `string` | `"na"` | no |
 
 ## Outputs
 
@@ -182,12 +241,8 @@ No modules.
 |------|-------------|
 | <a name="output_current_client_id"></a> [current\_client\_id](#output\_current\_client\_id) | The client ID of the current account in nOps |
 | <a name="output_is_master_account"></a> [is\_master\_account](#output\_is\_master\_account) | Whether the current account is the master account |
-| <a name="output_is_master_account_out"></a> [is\_master\_account\_out](#output\_is\_master\_account\_out) | Indicates if the account is the master account |
 | <a name="output_master_account_id"></a> [master\_account\_id](#output\_master\_account\_id) | The account ID of the AWS Organization's master account |
-| <a name="output_nops_integration_status"></a> [nops\_integration\_status](#output\_nops\_integration\_status) | Indicates if the nOps integration notification was sent |
-| <a name="output_notify_nops_integration_complete_status"></a> [notify\_nops\_integration\_complete\_status](#output\_notify\_nops\_integration\_complete\_status) | Status of the nOps integration notification |
 | <a name="output_project_aws_list"></a> [project\_aws\_list](#output\_project\_aws\_list) | List of projects in nOps |
-| <a name="output_project_status"></a> [project\_status](#output\_project\_status) | Status of the nOps project for this account |
 | <a name="output_role_arn"></a> [role\_arn](#output\_role\_arn) | The ARN of the IAM role |
 | <a name="output_system_bucket_name"></a> [system\_bucket\_name](#output\_system\_bucket\_name) | The name of the S3 bucket (if created) |
 <!-- END_TF_DOCS -->

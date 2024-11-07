@@ -3,7 +3,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 4.0"
+      version = ">= 4.0"
     }
     http = {
       source  = "hashicorp/http"
@@ -16,6 +16,10 @@ terraform {
     null = {
       source  = "hashicorp/null"
       version = "3.2.3"
+    }
+    nops = {
+      source  = "nops-io/nops"
+      version = "~>0.0.4"
     }
   }
 }

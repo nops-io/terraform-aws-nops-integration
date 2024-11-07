@@ -1,27 +1,26 @@
-variable "nops_url" {
-  type        = string
-  default     = "https://app.nops.io/"
-  description = "The nOps base URL"
-}
-
-variable "nops_principal" {
-  type        = string
-  default     = "202279780353"
-  description = "The nOps principal account number"
-}
-
+# tflint-ignore: terraform_unused_declarations
 variable "api_key" {
   type        = string
-  description = "The nOps API key"
+  description = "[DEPRECATED] The nOps API key, can be supplied as an env var NOPS_API_KEY or in the provider call in your configuration."
+  sensitive   = true
+  default     = ""
+}
+
+variable "min_required_permissions" {
+  type        = bool
+  default     = false
+  description = "If true, IAM policies with the min base permissions for nOps to get cost and usage data will be created. Some platform features will not be available."
 }
 
 variable "system_bucket_name" {
   type        = string
-  description = "The name of the system bucket for nOps integration"
+  default     = "na"
+  description = "The name of the system bucket for nOps integration, this will be deprecated in the future. Keeping for backwards compatibility."
 }
 
+# tflint-ignore: terraform_unused_declarations
 variable "reconfigure" {
   type        = bool
   default     = false
-  description = "If true, allows overriding existing project settings. If false, stops execution if project already exists."
+  description = "[DEPRECATED] If true, allows overriding existing project settings. If false, stops execution if project already exists."
 }
