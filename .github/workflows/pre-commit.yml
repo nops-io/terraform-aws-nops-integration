@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install Python
         uses: actions/setup-python@v2
@@ -35,7 +35,6 @@ jobs:
           curl -Lo ./terraform-docs.tar.gz https://github.com/terraform-docs/terraform-docs/releases/download/${{ env.TERRAFORM_DOCS_VERSION }}/terraform-docs-${{ env.TERRAFORM_DOCS_VERSION }}-$(uname)-amd64.tar.gz && tar -xzf terraform-docs.tar.gz terraform-docs && chmod +x terraform-docs && sudo mv terraform-docs /usr/bin/
           curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
           curl -Lo ./hcledit.tar.gz https://github.com/minamijoyo/hcledit/releases/download/v${{ env.TFHCLEDIT_VERSION }}/hcledit_${{ env.TFHCLEDIT_VERSION }}_$(uname)_amd64.tar.gz && tar -xzf hcledit.tar.gz hcledit && chmod +x hcledit && sudo mv hcledit /usr/bin/
-
 
       - name: Execute pre-commit
         run: pre-commit run --color=always --show-diff-on-failure --all-files
