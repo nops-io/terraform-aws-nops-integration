@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.2](https://github.com/nops-io/terraform-aws-nops-integration/compare/v1.0.1...v1.0.2) (2024-11-11)
+
+
+### Bug Fixes
+
+* Bumping nops provider version to fix imports and add project detection ([#7](https://github.com/nops-io/terraform-aws-nops-integration/issues/7)) ([0bbda39](https://github.com/nops-io/terraform-aws-nops-integration/commit/0bbda399b93105f4807bf331a0f713c318b4e4fd))
+
 ## [1.0.1](https://github.com/nops-io/terraform-aws-nops-integration/compare/v1.0.0...v1.0.1) (2024-11-08)
 
 
