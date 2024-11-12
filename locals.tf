@@ -6,6 +6,6 @@ locals {
   client_id          = nops_project.project.id
   project_id         = nops_project.project.client
   external_id        = nops_project.project.external_id
-  system_bucket_name = var.system_bucket_name != "na" ? var.system_bucket_name : "nops-${local.client_id}-${local.project_id}-${local.account_id}"
+  system_bucket_name = "nops-${local.client_id}-${local.project_id}-${local.account_id}"
   create_bucket      = local.is_master_account
 }

@@ -519,7 +519,7 @@ resource "aws_iam_role_policy" "nops_integration_policy" {
 }
 
 resource "aws_iam_role_policy" "nops_system_bucket_policy" {
-  count = local.is_master_account && local.system_bucket_name != "na" ? 1 : 0
+  count = local.create_bucket ? 1 : 0
   name  = "NopsSystemBucketPolicy"
   role  = aws_iam_role.nops_integration_role.id
 
