@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.3](https://github.com/nops-io/terraform-aws-nops-integration/compare/v1.0.2...v1.0.3) (2024-11-12)
+
+
+### Bug Fixes
+
+* removing bucket name ver references ([#8](https://github.com/nops-io/terraform-aws-nops-integration/issues/8)) ([e17f24d](https://github.com/nops-io/terraform-aws-nops-integration/commit/e17f24d6cd36e2350e6ab8755b8cb02026128f4b))
+
 ## [1.0.2](https://github.com/nops-io/terraform-aws-nops-integration/compare/v1.0.1...v1.0.2) (2024-11-11)
 
 
