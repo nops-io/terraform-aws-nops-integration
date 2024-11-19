@@ -21,10 +21,6 @@ This Terraform module automates the process of integrating your AWS account with
 - AWS CLI configured with appropriate permissions
 - nOps API key
 
-## Minimum required IAM permissions
-Customers can opt to reduce the scope for the `nOps` IAM role. In order to do this, the variable `min_required_permissions` should be set to true.
-However, in this restricted mode the `nOps` platform might not show the complete metadata for AWS resources.
-
 ## Usage
 
 ### Onboarding Payer account
@@ -51,10 +47,6 @@ provider "nops" {
 
 provider "aws" {
   alias  = "root"
-  region = "us-east-1"
-  assume_role {
-    role_arn = "arn:aws:iam::123456789012:role/admin-role"
-  }
 }
 
 module tf_onboarding {
@@ -63,7 +55,6 @@ module tf_onboarding {
   }
   source             = "nops-io/nops-integration/aws"
   # nOps API key that will be used to authenticate with the nOps platform to onboard the account.
-  api_key            = "nops_api_key"
 }
 ```
 
@@ -104,16 +95,12 @@ provider "nops" {
 provider "aws" {
   alias  = "child"
   region = "us-east-1"
-  assume_role {
-    role_arn = "arn:aws:iam::xxxxxxxx:role/admin-role"
-  }
 }
 
 module tf_onboarding {
   providers = {
     aws = aws.child
   }
-
   source             = "nops-io/nops-integration/aws"
 }
 ```
@@ -140,7 +127,7 @@ The resources that were imported are shown above. These resources are now in
 your Terraform state and will henceforth be managed by Terraform.
 
 ```
-- After the above, we need to import the integration with the AWS account, for this run the following replacing your AWS acconunt ID.
+- After the above, we need to import the integration with the AWS account, for this run the following replacing your AWS account ID.
 ```
 terraform import module.tf_onboarding.nops_integration.integration XXXXXX
 ```
@@ -160,7 +147,7 @@ your Terraform state and will henceforth be managed by Terraform.
 
 ## Minimum nOps required IAM policies ##
 
-A variable named `min_required_permissions` has been declared in the **nOps** terraform module that enabled customers choosing a more restricted setup to be able to use the platform.
+A variable named `min_required_permissions` has been declared in the **nOps** terraform module that enables customers choosing a more restricted setup to be able to use the platform.
 In order to enter this restricted mode, set the variable to `true`. Take into consideration that **nOps** will not be able to get the full metadata for AWS resources with this setup.
 To review these permissions, refer to the [policies](../IAM/iam-minimum-platform-permissions.mdx) page or the [Terraform module](https://registry.terraform.io/modules/nops-io/nops-integration/aws/latest) for the most recent updates.
 
