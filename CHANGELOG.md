@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.4](https://github.com/nops-io/terraform-aws-nops-integration/compare/v1.0.3...v1.0.4) (2024-11-19)
+
+
+### Bug Fixes
+
+* Removing invite account to org permission, README fixes ([#9](https://github.com/nops-io/terraform-aws-nops-integration/issues/9)) ([547b70e](https://github.com/nops-io/terraform-aws-nops-integration/commit/547b70e0a5fc5c08e998c6e7f8635af35ab7eca3))
+
 ## [1.0.3](https://github.com/nops-io/terraform-aws-nops-integration/compare/v1.0.2...v1.0.3) (2024-11-12)
 
 
