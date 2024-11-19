@@ -250,7 +250,6 @@ resource "aws_iam_role_policy" "nops_integration_minimum_policy" {
           "lambda:GetFunction",
           "lambda:GetPolicy",
           "lambda:ListFunctions",
-          "organizations:InviteAccountToOrganization",
           "rds:DescribeDBClusters",
           "rds:DescribeDBInstances",
           "rds:DescribeDBSnapshots",
