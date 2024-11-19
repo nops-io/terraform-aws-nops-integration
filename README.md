@@ -47,10 +47,6 @@ provider "nops" {
 
 provider "aws" {
   alias  = "root"
-  region = "us-east-1"
-  assume_role {
-    role_arn = "arn:aws:iam::123456789012:role/admin-role"
-  }
 }
 
 module tf_onboarding {
@@ -59,7 +55,6 @@ module tf_onboarding {
   }
   source             = "nops-io/nops-integration/aws"
   # nOps API key that will be used to authenticate with the nOps platform to onboard the account.
-  api_key            = "nops_api_key"
 }
 ```
 
@@ -100,16 +95,12 @@ provider "nops" {
 provider "aws" {
   alias  = "child"
   region = "us-east-1"
-  assume_role {
-    role_arn = "arn:aws:iam::xxxxxxxx:role/admin-role"
-  }
 }
 
 module tf_onboarding {
   providers = {
     aws = aws.child
   }
-
   source             = "nops-io/nops-integration/aws"
 }
 ```
