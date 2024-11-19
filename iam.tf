@@ -307,7 +307,6 @@ resource "aws_iam_role_policy" "nops_integration_policy" {
           "cur:PutReportDefinition",
           "ce:ListCostAllocationTags",
           "ce:UpdateCostAllocationTagsStatus",
-          "organizations:InviteAccountToOrganization",
           "s3:ListBucket",
           "support:DescribeTrustedAdvisorCheckRefreshStatuses",
           "support:DescribeTrustedAdvisorCheckResult",
