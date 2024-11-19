@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.5](https://github.com/nops-io/terraform-aws-nops-integration/compare/v1.0.4...v1.0.5) (2024-11-19)
+
+
+### Bug Fixes
+
+* Remove invite account to org from min policy as well ([#10](https://github.com/nops-io/terraform-aws-nops-integration/issues/10)) ([dde593b](https://github.com/nops-io/terraform-aws-nops-integration/commit/dde593bc90b61f64030fedcbe43c86902256e865))
+
 ## [1.0.4](https://github.com/nops-io/terraform-aws-nops-integration/compare/v1.0.3...v1.0.4) (2024-11-19)
 
 
