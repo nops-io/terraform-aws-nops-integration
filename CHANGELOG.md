@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.1](https://github.com/nops-io/terraform-aws-nops-integration/compare/v1.1.0...v1.1.1) (2024-11-25)
+
+
+### Bug Fixes
+
+* fixing description on cloud account name var ([#12](https://github.com/nops-io/terraform-aws-nops-integration/issues/12)) ([93e3687](https://github.com/nops-io/terraform-aws-nops-integration/commit/93e3687127dd60b6307353f9085f05de6842e510))
+
 ## [1.1.0](https://github.com/nops-io/terraform-aws-nops-integration/compare/v1.0.5...v1.1.0) (2024-11-25)
 
 
