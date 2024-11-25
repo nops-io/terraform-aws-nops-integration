@@ -29,5 +29,5 @@ variable "reconfigure" {
 variable "cloud_account_name" {
   type        = string
   default     = ""
-  description = "If true, IAM policies with the min base permissions for nOps to get cost and usage data will be created. Some platform features will not be available."
+  description = "Name with which the AWS account will appear on the nOps platform, leave empty for a name with format: AWS Account XXXXXX."
 }
