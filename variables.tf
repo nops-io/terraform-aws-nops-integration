@@ -25,3 +25,9 @@ variable "reconfigure" {
   default     = false
   description = "[DEPRECATED] If true, allows overriding existing project settings. If false, stops execution if project already exists."
 }
+
+variable "cloud_account_name" {
+  type        = string
+  default     = ""
+  description = "If true, IAM policies with the min base permissions for nOps to get cost and usage data will be created. Some platform features will not be available."
+}
