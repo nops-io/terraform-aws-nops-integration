@@ -1,5 +1,5 @@
 resource "nops_project" "project" {
-  name                        = "AWS Account ${data.aws_caller_identity.current.account_id}"
+  name                        = var.cloud_account_name == "" ? "AWS Account ${data.aws_caller_identity.current.account_id}" : var.cloud_account_name
   account_number              = data.aws_caller_identity.current.account_id
   master_payer_account_number = data.aws_organizations_organization.current.master_account_id
 }
