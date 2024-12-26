@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.2](https://github.com/nops-io/terraform-aws-nops-integration/compare/v1.1.1...v1.1.2) (2024-12-26)
+
+
+### Bug Fixes
+
+* Removing dependency constraint for nops provider on module ([#13](https://github.com/nops-io/terraform-aws-nops-integration/issues/13)) ([d5a3657](https://github.com/nops-io/terraform-aws-nops-integration/commit/d5a3657ab326572d48dd0a75421d88b53ea3063c))
+
 ## [1.1.1](https://github.com/nops-io/terraform-aws-nops-integration/compare/v1.1.0...v1.1.1) (2024-11-25)
 
 
