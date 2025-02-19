@@ -77,7 +77,8 @@ resource "aws_iam_role_policy" "nops_wafr_policy" {
           "trustedadvisor:ListRecommendationResources",
           "trustedadvisor:ListRecommendations",
           "wellarchitected:*",
-          "workspaces:DescribeWorkspaceDirectories"
+          "workspaces:DescribeWorkspaceDirectories",
+          "workspaces:DescribeWorkspaces"
         ]
         Resource = "*"
       }
