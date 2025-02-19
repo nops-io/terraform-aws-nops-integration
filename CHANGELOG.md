@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.3](https://github.com/nops-io/terraform-aws-nops-integration/compare/v1.1.2...v1.1.3) (2025-02-19)
+
+
+### Bug Fixes
+
+* adding workspace permissions ([00ab5ef](https://github.com/nops-io/terraform-aws-nops-integration/commit/00ab5ef72571186e9cc3ce9755cb2fc8e065e0b8))
+* license ([#14](https://github.com/nops-io/terraform-aws-nops-integration/issues/14)) ([8f69fd3](https://github.com/nops-io/terraform-aws-nops-integration/commit/8f69fd3bd9942a8d063af17bce31e3a19b1d0212))
+
 ## [1.1.2](https://github.com/nops-io/terraform-aws-nops-integration/compare/v1.1.1...v1.1.2) (2024-12-26)
 
 
