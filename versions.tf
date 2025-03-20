@@ -15,7 +15,7 @@ terraform {
     }
     null = {
       source  = "hashicorp/null"
-      version = "3.2.3"
+      version = "~> 3.2"
     }
     nops = {
       source  = "nops-io/nops"
