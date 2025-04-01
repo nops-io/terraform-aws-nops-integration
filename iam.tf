@@ -213,6 +213,8 @@ resource "aws_iam_role_policy" "nops_integration_minimum_policy" {
           "cost-optimization-hub:ListEnrollmentStatuses",
           "cost-optimization-hub:ListRecommendations",
           "cost-optimization-hub:ListRecommendationSummaries",
+          "cost-optimization-hub:UpdateEnrollmentStatus",
+          "cost-optimization-hub:UpdatePreferences",
           "consolidatedbilling:ListLinkedAccounts",
           "cur:GetClassicReport",
           "cur:GetClassicReportPreferences",
