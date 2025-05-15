@@ -39,21 +39,6 @@ resource "aws_iam_role_policy" "nops_wafr_policy" {
       {
         Effect = "Allow"
         Action = [
-          "access-analyzer:GetAccessPreview",
-          "access-analyzer:GetAnalyzedResource",
-          "access-analyzer:GetAnalyzer",
-          "access-analyzer:GetArchiveRule",
-          "access-analyzer:GetFinding",
-          "access-analyzer:GetGeneratedPolicy",
-          "access-analyzer:ListAccessPreviewFindings",
-          "access-analyzer:ListAccessPreviews",
-          "access-analyzer:ListAnalyzedResources",
-          "access-analyzer:ListAnalyzers",
-          "access-analyzer:ListArchiveRules",
-          "access-analyzer:ListFindings",
-          "access-analyzer:ListPolicyGenerations",
-          "access-analyzer:ListTagsForResource",
-          "access-analyzer:ValidatePolicy",
           "cloudtrail:DescribeTrails",
           "cloudtrail:LookupEvents",
           "cloudwatch:GetMetricStatistics",
@@ -64,21 +49,10 @@ resource "aws_iam_role_policy" "nops_wafr_policy" {
           "iam:GetAccountSummary",
           "iam:GetAccountPasswordPolicy",
           "iam:ListAttachedUserPolicies",
-          "inspector:ListAssessmentRuns",
           "ec2:DescribeFlowLogs",
           "ec2:DescribeRouteTables",
           "ec2:DescribeSecurityGroups",
-          "trustedadvisor:GetOrganizationRecommendation",
-          "trustedadvisor:GetRecommendation",
-          "trustedadvisor:ListChecks",
-          "trustedadvisor:ListOrganizationRecommendationAccounts",
-          "trustedadvisor:ListOrganizationRecommendationResources",
-          "trustedadvisor:ListOrganizationRecommendations",
-          "trustedadvisor:ListRecommendationResources",
-          "trustedadvisor:ListRecommendations",
-          "wellarchitected:*",
-          "workspaces:DescribeWorkspaceDirectories",
-          "workspaces:DescribeWorkspaces"
+          "workspaces:DescribeWorkspaceDirectories"
         ]
         Resource = "*"
       }
