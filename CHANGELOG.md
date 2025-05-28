@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.0](https://github.com/nops-io/terraform-aws-nops-integration/compare/v1.1.3...v1.2.0) (2025-05-27)
+
+
+### Features
+
+* Removed WAFR policies ([...](https://github.com/nops-io/terraform-aws-nops-integration/commit/...))
+
+
 ## [1.1.3](https://github.com/nops-io/terraform-aws-nops-integration/compare/v1.1.2...v1.1.3) (2025-02-19)
 
 
