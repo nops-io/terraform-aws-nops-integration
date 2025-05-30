@@ -20,70 +20,12 @@ resource "aws_iam_role" "nops_integration_role" {
   })
 
   tags = {
-    version = "1.1.0"
+    version = "1.2.0"
   }
 
   depends_on = [
     nops_project.project
   ]
-}
-
-resource "aws_iam_role_policy" "nops_wafr_policy" {
-  count = var.min_required_permissions ? 1 : 0
-  name  = "NopsWAFRPolicy"
-  role  = aws_iam_role.nops_integration_role.id
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Effect = "Allow"
-        Action = [
-          "access-analyzer:GetAccessPreview",
-          "access-analyzer:GetAnalyzedResource",
-          "access-analyzer:GetAnalyzer",
-          "access-analyzer:GetArchiveRule",
-          "access-analyzer:GetFinding",
-          "access-analyzer:GetGeneratedPolicy",
-          "access-analyzer:ListAccessPreviewFindings",
-          "access-analyzer:ListAccessPreviews",
-          "access-analyzer:ListAnalyzedResources",
-          "access-analyzer:ListAnalyzers",
-          "access-analyzer:ListArchiveRules",
-          "access-analyzer:ListFindings",
-          "access-analyzer:ListPolicyGenerations",
-          "access-analyzer:ListTagsForResource",
-          "access-analyzer:ValidatePolicy",
-          "cloudtrail:DescribeTrails",
-          "cloudtrail:LookupEvents",
-          "cloudwatch:GetMetricStatistics",
-          "config:DescribeConfigurationRecorders",
-          "dynamodb:DescribeTable",
-          "iam:ListUsers",
-          "iam:GetRole",
-          "iam:GetAccountSummary",
-          "iam:GetAccountPasswordPolicy",
-          "iam:ListAttachedUserPolicies",
-          "inspector:ListAssessmentRuns",
-          "ec2:DescribeFlowLogs",
-          "ec2:DescribeRouteTables",
-          "ec2:DescribeSecurityGroups",
-          "trustedadvisor:GetOrganizationRecommendation",
-          "trustedadvisor:GetRecommendation",
-          "trustedadvisor:ListChecks",
-          "trustedadvisor:ListOrganizationRecommendationAccounts",
-          "trustedadvisor:ListOrganizationRecommendationResources",
-          "trustedadvisor:ListOrganizationRecommendations",
-          "trustedadvisor:ListRecommendationResources",
-          "trustedadvisor:ListRecommendations",
-          "wellarchitected:*",
-          "workspaces:DescribeWorkspaceDirectories",
-          "workspaces:DescribeWorkspaces"
-        ]
-        Resource = "*"
-      }
-    ]
-  })
 }
 
 resource "aws_iam_role_policy" "nops_essentials_policy" {
@@ -125,9 +67,13 @@ resource "aws_iam_role_policy" "nops_compute_copilot_policy" {
           "ec2:DescribeLaunchTemplateVersions",
           "ec2:DescribeLaunchConfigurations",
           "ec2:DescribeImages",
+          "ec2:DescribeInstances",
+          "ec2:DescribeInstanceTypes",
+          "ec2:DescribeReservedInstances",
           "lambda:InvokeFunction",
           "cloudformation:ListStacks",
           "cloudformation:DescribeStacks",
+          "savingsplans:DescribeSavingsPlans",
         ]
         Resource = "*"
       }
@@ -151,12 +97,10 @@ resource "aws_iam_role_policy" "nops_integration_minimum_policy" {
           "autoscaling-plans:DescribeScalingPlans",
           "autoscaling-plans:GetScalingPlanResourceForecastData",
           "autoscaling-plans:DescribeScalingPlanResources",
-          "autoscaling:DescribeAutoScalingInstances",
           "autoscaling:DescribePolicies",
           "autoscaling:DescribeLaunchConfigurations",
           "autoscaling:DescribeLoadBalancers",
           "autoscaling:DescribeScalingActivities",
-          "autoscaling:DescribeAutoScalingGroups",
           "autoscaling:DescribeAccountLimits",
           "apigateway:GET",
           "ce:DescribeCostCategoryDefinition",
@@ -190,6 +134,9 @@ resource "aws_iam_role_policy" "nops_integration_minimum_policy" {
           "ce:ListTagsForResource",
           "ce:StartSavingsPlansPurchaseRecommendationGeneration",
           "ce:UpdateCostAllocationTagsStatus",
+          "cloudtrail:DescribeTrails",
+          "cloudtrail:LookupEvents",
+          "cloudwatch:GetMetricStatistics",
           "compute-optimizer:DescribeRecommendationExportJobs",
           "compute-optimizer:GetAutoScalingGroupRecommendations",
           "compute-optimizer:GetEBSVolumeRecommendations",
@@ -213,6 +160,8 @@ resource "aws_iam_role_policy" "nops_integration_minimum_policy" {
           "cost-optimization-hub:ListEnrollmentStatuses",
           "cost-optimization-hub:ListRecommendations",
           "cost-optimization-hub:ListRecommendationSummaries",
+          "cost-optimization-hub:UpdateEnrollmentStatus",
+          "cost-optimization-hub:UpdatePreferences",
           "consolidatedbilling:ListLinkedAccounts",
           "cur:GetClassicReport",
           "cur:GetClassicReportPreferences",
@@ -231,6 +180,7 @@ resource "aws_iam_role_policy" "nops_integration_minimum_policy" {
           "ec2:DescribeAvailabilityZones",
           "ec2:DescribeInstanceStatus",
           "ec2:DescribeSnapshots",
+          "ec2:DescribeSecurityGroups",
           "ecs:ListClusters",
           "eks:ListTagsForResource",
           "eks:ListClusters",
@@ -245,8 +195,12 @@ resource "aws_iam_role_policy" "nops_integration_minimum_policy" {
           "es:ListDomainNames",
           "events:ListRules",
           "guardduty:ListDetectors",
-          "iam:ListRoles",
+          "iam:GetRole",
+          "iam:GetAccountSummary",
           "iam:ListAccountAliases",
+          "iam:ListAttachedUserPolicies",
+          "iam:ListRoles",
+          "iam:ListUsers",
           "kms:Decrypt",
           "lambda:GetFunction",
           "lambda:GetPolicy",
@@ -268,9 +222,6 @@ resource "aws_iam_role_policy" "nops_integration_minimum_policy" {
           "savingsplans:DescribeSavingsPlansOfferings",
           "savingsplans:ListTagsForResource",
           "support:DescribeCases",
-          "support:DescribeTrustedAdvisorCheckRefreshStatuses",
-          "support:DescribeTrustedAdvisorCheckResult",
-          "support:DescribeTrustedAdvisorChecks",
           "tag:GetResources",
           "tag:GetTagValues",
           "tag:DescribeReportCreation",
@@ -306,15 +257,9 @@ resource "aws_iam_role_policy" "nops_integration_policy" {
           "cur:DescribeReportDefinitions",
           "cur:DeleteReportDefinition",
           "cur:PutReportDefinition",
-          "ce:ListCostAllocationTags",
-          "ce:UpdateCostAllocationTagsStatus",
           "s3:ListBucket",
-          "support:DescribeTrustedAdvisorCheckRefreshStatuses",
-          "support:DescribeTrustedAdvisorCheckResult",
-          "support:DescribeTrustedAdvisorChecks",
-          "wellarchitected:*",
-          "ce:*",
-          "events:CreateEventBus"
+          "events:CreateEventBus",
+          "ce:*"
         ]
         Resource = "*"
       },
