@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file.
 
 ### Features
 
-* Added support:CreateCase permission to Integration Policy ([...](https://github.com/nops-io/terraform-aws-nops-integration/commit/...))
+* Added support:CreateCase permission to Integration Policy ([a455914](https://github.com/nops-io/terraform-aws-nops-integration/commit/a4559147f7c9c1ab4a5168064948b103c08190fc))
 
 
 ## [1.2.0](https://github.com/nops-io/terraform-aws-nops-integration/compare/v1.1.3...v1.2.0) (2025-05-27)
