@@ -2,12 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.1](https://github.com/nops-io/terraform-aws-nops-integration/compare/v1.2.0...v1.2.1) (2025-06-10)
+
+
+### Features
+
+* Added support:CreateCase permission to Integration Policy ([...](https://github.com/nops-io/terraform-aws-nops-integration/commit/...))
+
+
 ## [1.2.0](https://github.com/nops-io/terraform-aws-nops-integration/compare/v1.1.3...v1.2.0) (2025-05-27)
 
 
 ### Features
 
-* Removed WAFR policies ([...](https://github.com/nops-io/terraform-aws-nops-integration/commit/...))
+* Removed WAFR policies ([c6d3269](https://github.com/nops-io/terraform-aws-nops-integration/commit/c6d32699ae858846cd8f171a59d7c5f5a619d6c6))
 
 
 ## [1.1.3](https://github.com/nops-io/terraform-aws-nops-integration/compare/v1.1.2...v1.1.3) (2025-02-19)
