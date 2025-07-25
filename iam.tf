@@ -20,7 +20,7 @@ resource "aws_iam_role" "nops_integration_role" {
   })
 
   tags = {
-    version = "1.2.0"
+    version = "1.2.1"
   }
 
   depends_on = [
@@ -221,6 +221,7 @@ resource "aws_iam_role_policy" "nops_integration_minimum_policy" {
           "savingsplans:DescribeSavingsPlansOfferingRates",
           "savingsplans:DescribeSavingsPlansOfferings",
           "savingsplans:ListTagsForResource",
+          "support:CreateCase",
           "support:DescribeCases",
           "tag:GetResources",
           "tag:GetTagValues",
@@ -258,6 +259,7 @@ resource "aws_iam_role_policy" "nops_integration_policy" {
           "cur:DeleteReportDefinition",
           "cur:PutReportDefinition",
           "s3:ListBucket",
+          "support:CreateCase",
           "events:CreateEventBus",
           "ce:*"
         ]
