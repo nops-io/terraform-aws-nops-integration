@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.1](https://github.com/nops-io/terraform-aws-nops-integration/compare/v1.3.0...v1.3.1) (2025-08-21)
+
+
+### Bug Fixes
+
+* Add null provider flexibility ([2e79766](https://github.com/nops-io/terraform-aws-nops-integration/commit/2e79766dc8f3af10dfe6ddfcaaa7e763daf597b4))
+* v1.3.1 - allow null provider flexbility ([624423c](https://github.com/nops-io/terraform-aws-nops-integration/commit/624423c2f14a9e2b9f7951ecf43522e2c71e83e5))
 
 ## [1.3.0](https://github.com/nops-io/terraform-aws-nops-integration/compare/v1.2.0...v1.3.0) (2025-07-25)
 
