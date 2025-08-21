@@ -8,7 +8,7 @@ All notable changes to this project will be documented in this file.
 
 ### Features
 
-* v1.2.1 - added support:CreateCase ([a455914](https://github.com/nops-io/terraform-aws-nops-integration/commit/a4559147f7c9c1ab4a5168064948b103c08190fc))
+* added support:CreateCase ([a455914](https://github.com/nops-io/terraform-aws-nops-integration/commit/a4559147f7c9c1ab4a5168064948b103c08190fc))
 
 ## [1.2.1](https://github.com/nops-io/terraform-aws-nops-integration/compare/v1.2.0...v1.2.1) (2025-06-10)
 
