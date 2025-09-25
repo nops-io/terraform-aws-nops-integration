@@ -28,8 +28,127 @@ resource "aws_iam_role" "nops_integration_role" {
   ]
 }
 
+resource "aws_iam_role_policy" "nops_cri_readonly_policy" {
+  count = var.cri_usage_only ? 1 : 0
+  name  = "nOps-CRI-read-only-policy"
+  role  = aws_iam_role.nops_integration_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "ce:DescribeCostCategoryDefinition",
+          "ce:DescribeNotificationSubscription",
+          "ce:DescribeReport",
+          "ce:GetAnomalies",
+          "ce:GetAnomalyMonitors",
+          "ce:GetAnomalySubscriptions",
+          "ce:GetApproximateUsageRecords",
+          "ce:GetCostAndUsage",
+          "ce:GetCostAndUsageWithResources",
+          "ce:GetCostCategories",
+          "ce:GetCostForecast",
+          "ce:GetDimensionValues",
+          "ce:GetPreferences",
+          "ce:GetReservationCoverage",
+          "ce:GetReservationPurchaseRecommendation",
+          "ce:GetReservationUtilization",
+          "ce:GetRightsizingRecommendation",
+          "ce:GetSavingsPlanPurchaseRecommendationDetails",
+          "ce:GetSavingsPlansCoverage",
+          "ce:GetSavingsPlansPurchaseRecommendation",
+          "ce:GetSavingsPlansUtilization",
+          "ce:GetSavingsPlansUtilizationDetails",
+          "ce:GetTags",
+          "ce:GetUsageForecast",
+          "ce:ListCostAllocationTagBackfillHistory",
+          "ce:ListCostAllocationTags",
+          "ce:ListCostCategoryDefinitions",
+          "ce:ListSavingsPlansPurchaseRecommendationGeneration",
+          "ce:ListTagsForResource",
+          "ce:StartSavingsPlansPurchaseRecommendationGeneration",
+          "ce:UpdateCostAllocationTagsStatus",
+          "cloudtrail:DescribeTrails",
+          "cloudtrail:LookupEvents",
+          "config:DescribeConfigurationRecorders",
+          "consolidatedbilling:GetAccountBillingRole",
+          "cost-optimization-hub:GetPreferences",
+          "cost-optimization-hub:GetRecommendation",
+          "cost-optimization-hub:ListEnrollmentStatuses",
+          "cost-optimization-hub:ListRecommendations",
+          "cost-optimization-hub:ListRecommendationSummaries",
+          "cost-optimization-hub:UpdateEnrollmentStatus",
+          "cost-optimization-hub:UpdatePreferences",
+          "consolidatedbilling:ListLinkedAccounts",
+          "cur:GetClassicReport",
+          "cur:GetClassicReportPreferences",
+          "cur:GetUsageReport",
+          "cur:DescribeReportDefinitions",
+          "cur:PutReportDefinition",
+          "ec2:DescribeImages",
+          "ec2:DescribeInstances",
+          "ec2:DescribeNatGateways",
+          "ec2:DescribeNetworkInterfaces",
+          "ec2:DescribeRegions",
+          "ec2:DescribeReservedInstances",
+          "ec2:DescribeVolumes",
+          "ec2:DescribeVpcs",
+          "ec2:DescribeAvailabilityZones",
+          "ec2:DescribeInstanceStatus",
+          "ec2:DescribeSnapshots",
+          "ec2:DescribeSecurityGroups",
+          "elasticache:DescribeCacheClusters",
+          "elasticache:DescribeCacheSubnetGroups",
+          "es:DescribeElasticsearchDomains",
+          "es:ListDomainNames",
+          "events:ListRules",
+          "iam:GetRole",
+          "iam:GetAccountSummary",
+          "iam:ListAccountAliases",
+          "iam:ListAttachedUserPolicies",
+          "iam:ListRoles",
+          "iam:ListUsers",
+          "kms:Decrypt",
+          "lambda:GetFunction",
+          "lambda:GetPolicy",
+          "lambda:ListFunctions",
+          "rds:DescribeDBClusters",
+          "rds:DescribeDBInstances",
+          "rds:DescribeDBSnapshots",
+          "rds:DescribeDBClusterSnapshotAttributes",
+          "rds:DescribeDBClusterSnapshots",
+          "rds:DescribeDBRecommendations",
+          "rds:DescribeDBSecurityGroups",
+          "rds:ListTagsForResource",
+          "redshift:DescribeClusters",
+          "s3:ListAllMyBuckets",
+          "s3:GetBucketVersioning",
+          "savingsplans:DescribeSavingsPlanRates",
+          "savingsplans:DescribeSavingsPlans",
+          "savingsplans:DescribeSavingsPlansOfferingRates",
+          "savingsplans:DescribeSavingsPlansOfferings",
+          "savingsplans:ListTagsForResource",
+          "support:CreateCase",
+          "support:DescribeCases",
+          "tag:GetResources",
+          "tag:GetTagValues",
+          "tag:DescribeReportCreation",
+          "tag:GetTagKeys",
+          "tag:GetComplianceSummary",
+          "organizations:ListAccounts",
+          "organizations:DescribeOrganization",
+          "organizations:ListRoots",
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
 resource "aws_iam_role_policy" "nops_essentials_policy" {
-  count = var.min_required_permissions ? 1 : 0
+  count = var.min_required_permissions && !var.cri_usage_only ? 1 : 0
   name  = "NopsEssentialsPolicy"
   role  = aws_iam_role.nops_integration_role.id
 
@@ -54,7 +173,7 @@ resource "aws_iam_role_policy" "nops_essentials_policy" {
 }
 
 resource "aws_iam_role_policy" "nops_compute_copilot_policy" {
-  count = var.min_required_permissions ? 1 : 0
+  count = var.min_required_permissions && !var.cri_usage_only ? 1 : 0
   name  = "NopsComputeCopilotPolicy"
   role  = aws_iam_role.nops_integration_role.id
 
@@ -82,7 +201,7 @@ resource "aws_iam_role_policy" "nops_compute_copilot_policy" {
 }
 
 resource "aws_iam_role_policy" "nops_integration_minimum_policy" {
-  count = var.min_required_permissions ? 1 : 0
+  count = var.min_required_permissions && !var.cri_usage_only ? 1 : 0
   name  = "NopsIntegrationPolicy"
   role  = aws_iam_role.nops_integration_role.id
 
@@ -239,13 +358,13 @@ resource "aws_iam_role_policy" "nops_integration_minimum_policy" {
 }
 
 resource "aws_iam_role_policy_attachment" "nops_integration_readonly_policy_attachment" {
-  count      = !var.min_required_permissions ? 1 : 0
+  count      = !var.min_required_permissions && !var.cri_usage_only ? 1 : 0
   role       = aws_iam_role.nops_integration_role.name
   policy_arn = data.aws_iam_policy.iam_readonly_access.arn
 }
 
 resource "aws_iam_role_policy" "nops_integration_policy" {
-  count = !var.min_required_permissions ? 1 : 0
+  count = !var.min_required_permissions && !var.cri_usage_only ? 1 : 0
   name  = "NopsIntegrationPolicy"
   role  = aws_iam_role.nops_integration_role.id
 

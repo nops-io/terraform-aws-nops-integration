@@ -151,6 +151,22 @@ A variable named `min_required_permissions` has been declared in the **nOps** te
 In order to enter this restricted mode, set the variable to `true`. Take into consideration that **nOps** will not be able to get the full metadata for AWS resources with this setup.
 To review these permissions, refer to the [policies](../IAM/iam-minimum-platform-permissions.mdx) page or the [Terraform module](https://registry.terraform.io/modules/nops-io/nops-integration/aws/latest) for the most recent updates.
 
+## CRI (Cost and Resource Intelligence) Only Mode ##
+
+For the most restrictive permission set, use the `cri_usage_only` variable. When set to `true`, only a single policy with CRI read-only permissions will be attached to the IAM role. This mode provides access to cost and usage data only.
+
+```hcl
+module tf_onboarding {
+  providers = {
+    aws = aws.root
+  }
+  source             = "nops-io/nops-integration/aws"
+  cri_usage_only     = true
+}
+```
+
+**Note:** `cri_usage_only` and `min_required_permissions` cannot both be set to `true` simultaneously.
+
 ## Troubleshooting ##
 
 If you see an error like the following
