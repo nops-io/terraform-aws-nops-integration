@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.4.0](https://github.com/nops-io/terraform-aws-nops-integration/compare/v1.3.1...v1.4.0) (2025-09-26)
+
+
+### Features
+
+* Add cri policy ([b0dfa85](https://github.com/nops-io/terraform-aws-nops-integration/commit/b0dfa8559f80d07a87cf96e77456657a437a2e5a))
+
 ## [1.3.1](https://github.com/nops-io/terraform-aws-nops-integration/compare/v1.3.0...v1.3.1) (2025-08-21)
 
 
