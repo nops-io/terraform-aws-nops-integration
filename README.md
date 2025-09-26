@@ -151,6 +151,22 @@ A variable named `min_required_permissions` has been declared in the **nOps** te
 In order to enter this restricted mode, set the variable to `true`. Take into consideration that **nOps** will not be able to get the full metadata for AWS resources with this setup.
 To review these permissions, refer to the [policies](../IAM/iam-minimum-platform-permissions.mdx) page or the [Terraform module](https://registry.terraform.io/modules/nops-io/nops-integration/aws/latest) for the most recent updates.
 
+## CRI (Cost and Resource Intelligence) Only Mode ##
+
+For the most restrictive permission set, use the `cri_usage_only` variable. When set to `true`, only a single policy with CRI read-only permissions will be attached to the IAM role. This mode provides access to cost and usage data only.
+
+```hcl
+module tf_onboarding {
+  providers = {
+    aws = aws.root
+  }
+  source             = "nops-io/nops-integration/aws"
+  cri_usage_only     = true
+}
+```
+
+**Note:** `cri_usage_only` and `min_required_permissions` cannot both be set to `true` simultaneously.
+
 ## Troubleshooting ##
 
 If you see an error like the following
@@ -208,6 +224,7 @@ No modules.
 |------|------|
 | [aws_iam_role.nops_integration_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
 | [aws_iam_role_policy.nops_compute_copilot_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
+| [aws_iam_role_policy.nops_cri_readonly_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
 | [aws_iam_role_policy.nops_essentials_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
 | [aws_iam_role_policy.nops_integration_minimum_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
 | [aws_iam_role_policy.nops_integration_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
@@ -231,6 +248,7 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_api_key"></a> [api\_key](#input\_api\_key) | [DEPRECATED] The nOps API key, can be supplied as an env var NOPS\_API\_KEY or in the provider call in your configuration. | `string` | `""` | no |
 | <a name="input_cloud_account_name"></a> [cloud\_account\_name](#input\_cloud\_account\_name) | Name with which the AWS account will appear on the nOps platform, leave empty for a name with format: AWS Account XXXXXX. | `string` | `""` | no |
+| <a name="input_cri_usage_only"></a> [cri\_usage\_only](#input\_cri\_usage\_only) | If true, only CRI (Cost and Resource Intelligence) read-only permissions will be attached. This is the most restrictive permission set. | `bool` | `false` | no |
 | <a name="input_min_required_permissions"></a> [min\_required\_permissions](#input\_min\_required\_permissions) | If true, IAM policies with the min base permissions for nOps to get cost and usage data will be created. Some platform features will not be available. | `bool` | `false` | no |
 | <a name="input_reconfigure"></a> [reconfigure](#input\_reconfigure) | [DEPRECATED] If true, allows overriding existing project settings. If false, stops execution if project already exists. | `bool` | `false` | no |
 | <a name="input_system_bucket_name"></a> [system\_bucket\_name](#input\_system\_bucket\_name) | [DEPRECATED]  The name of the system bucket for nOps integration. | `string` | `"na"` | no |

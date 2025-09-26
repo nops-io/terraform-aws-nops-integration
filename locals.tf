@@ -8,4 +8,6 @@ locals {
   external_id        = nops_project.project.external_id
   system_bucket_name = "nops-${local.client_id}-${local.project_id}-${local.account_id}"
   create_bucket      = local.is_master_account
+  # tflint-ignore: terraform_unused_declarations
+  validate_permissions = var.cri_usage_only && var.min_required_permissions ? tobool("ERROR: cri_usage_only and min_required_permissions cannot both be true") : true
 }

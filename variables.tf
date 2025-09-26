@@ -31,3 +31,9 @@ variable "cloud_account_name" {
   default     = ""
   description = "Name with which the AWS account will appear on the nOps platform, leave empty for a name with format: AWS Account XXXXXX."
 }
+
+variable "cri_usage_only" {
+  type        = bool
+  default     = false
+  description = "If true, only CRI (Cost and Resource Intelligence) read-only permissions will be attached. This is the most restrictive permission set."
+}
