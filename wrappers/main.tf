@@ -5,6 +5,7 @@ module "wrapper" {
 
   api_key                  = try(each.value.api_key, var.defaults.api_key, "")
   cloud_account_name       = try(each.value.cloud_account_name, var.defaults.cloud_account_name, "")
+  cri_usage_only           = try(each.value.cri_usage_only, var.defaults.cri_usage_only, false)
   min_required_permissions = try(each.value.min_required_permissions, var.defaults.min_required_permissions, false)
   reconfigure              = try(each.value.reconfigure, var.defaults.reconfigure, false)
   system_bucket_name       = try(each.value.system_bucket_name, var.defaults.system_bucket_name, "na")
